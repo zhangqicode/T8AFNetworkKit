@@ -14,9 +14,9 @@
 		6DB9EF481B19B21200355150 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DB9EF471B19B21200355150 /* Images.xcassets */; };
 		6DB9EF4B1B19B21200355150 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DB9EF491B19B21200355150 /* LaunchScreen.xib */; };
 		6DB9EF571B19B21200355150 /* T8AFNetworkKitDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF561B19B21200355150 /* T8AFNetworkKitDemoTests.m */; };
-		6DB9EF651B19B69700355150 /* T8BaseNetworkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF611B19B69700355150 /* T8BaseNetworkService.m */; };
-		6DB9EF661B19B69700355150 /* T8NetworkError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF641B19B69700355150 /* T8NetworkError.m */; };
 		6DB9EF691B19BDCF00355150 /* DemoService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF681B19BDCF00355150 /* DemoService.m */; };
+		6DC395DF1B1BFCF100270D0D /* T8BaseNetworkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC395DC1B1BFCF100270D0D /* T8BaseNetworkService.m */; };
+		6DC395E01B1BFCF100270D0D /* T8NetworkError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC395DE1B1BFCF100270D0D /* T8NetworkError.m */; };
 		CF6F0D8847893293C993568E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3DB72653A9C137ACA389861 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -44,12 +44,12 @@
 		6DB9EF501B19B21200355150 /* T8AFNetworkKitDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = T8AFNetworkKitDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB9EF551B19B21200355150 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6DB9EF561B19B21200355150 /* T8AFNetworkKitDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = T8AFNetworkKitDemoTests.m; sourceTree = "<group>"; };
-		6DB9EF611B19B69700355150 /* T8BaseNetworkService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8BaseNetworkService.m; sourceTree = "<group>"; };
-		6DB9EF621B19B69700355150 /* T8BaseNetworkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8BaseNetworkService.h; sourceTree = "<group>"; };
-		6DB9EF631B19B69700355150 /* T8NetworkError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8NetworkError.h; sourceTree = "<group>"; };
-		6DB9EF641B19B69700355150 /* T8NetworkError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8NetworkError.m; sourceTree = "<group>"; };
 		6DB9EF671B19BDCF00355150 /* DemoService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoService.h; sourceTree = "<group>"; };
 		6DB9EF681B19BDCF00355150 /* DemoService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoService.m; sourceTree = "<group>"; };
+		6DC395DB1B1BFCF100270D0D /* T8BaseNetworkService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8BaseNetworkService.h; sourceTree = "<group>"; };
+		6DC395DC1B1BFCF100270D0D /* T8BaseNetworkService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8BaseNetworkService.m; sourceTree = "<group>"; };
+		6DC395DD1B1BFCF100270D0D /* T8NetworkError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8NetworkError.h; sourceTree = "<group>"; };
+		6DC395DE1B1BFCF100270D0D /* T8NetworkError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8NetworkError.m; sourceTree = "<group>"; };
 		81FA36F4E9DA2F53340C1AC7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		9457D02E3883CEEE779BD831 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E3DB72653A9C137ACA389861 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,7 +103,7 @@
 				6DB9EF421B19B21200355150 /* ViewController.m */,
 				6DB9EF671B19BDCF00355150 /* DemoService.h */,
 				6DB9EF681B19BDCF00355150 /* DemoService.m */,
-				6DB9EF601B19B48100355150 /* T8AFNetworkKit */,
+				6DC395DA1B1BFCF100270D0D /* T8AFNetworkKit */,
 				6DB9EF441B19B21200355150 /* Main.storyboard */,
 				6DB9EF471B19B21200355150 /* Images.xcassets */,
 				6DB9EF491B19B21200355150 /* LaunchScreen.xib */,
@@ -138,13 +138,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		6DB9EF601B19B48100355150 /* T8AFNetworkKit */ = {
+		6DC395DA1B1BFCF100270D0D /* T8AFNetworkKit */ = {
 			isa = PBXGroup;
 			children = (
-				6DB9EF621B19B69700355150 /* T8BaseNetworkService.h */,
-				6DB9EF611B19B69700355150 /* T8BaseNetworkService.m */,
-				6DB9EF631B19B69700355150 /* T8NetworkError.h */,
-				6DB9EF641B19B69700355150 /* T8NetworkError.m */,
+				6DC395DB1B1BFCF100270D0D /* T8BaseNetworkService.h */,
+				6DC395DC1B1BFCF100270D0D /* T8BaseNetworkService.m */,
+				6DC395DD1B1BFCF100270D0D /* T8NetworkError.h */,
+				6DC395DE1B1BFCF100270D0D /* T8NetworkError.m */,
 			);
 			name = T8AFNetworkKit;
 			path = ../../T8AFNetworkKit;
@@ -303,11 +303,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DB9EF431B19B21200355150 /* ViewController.m in Sources */,
-				6DB9EF661B19B69700355150 /* T8NetworkError.m in Sources */,
 				6DB9EF691B19BDCF00355150 /* DemoService.m in Sources */,
-				6DB9EF651B19B69700355150 /* T8BaseNetworkService.m in Sources */,
 				6DB9EF401B19B21200355150 /* AppDelegate.m in Sources */,
+				6DC395DF1B1BFCF100270D0D /* T8BaseNetworkService.m in Sources */,
 				6DB9EF3D1B19B21200355150 /* main.m in Sources */,
+				6DC395E01B1BFCF100270D0D /* T8NetworkError.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

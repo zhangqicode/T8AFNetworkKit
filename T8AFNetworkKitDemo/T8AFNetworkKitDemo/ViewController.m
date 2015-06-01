@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [T8BaseNetworkService setBaseUrl:@"http://10.0.0.16:8080"];
+    [T8BaseNetworkService setBaseUrl:@"http://123.56.100.23:8080/bloodstone"];
     
     [DemoService testRequestWithUserid:@"5565bddd36396439351e7dc7" device:@"ip" block:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
         NSLog(@"tt:%@", data);

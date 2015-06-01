@@ -18,6 +18,9 @@ static NSString *T8BaseNetworkUrl = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shareInstance = [AFHTTPRequestOperationManager manager];
+        shareInstance.responseSerializer = [AFJSONResponseSerializer serializer];
+        shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
+
     });
     
     return shareInstance;
