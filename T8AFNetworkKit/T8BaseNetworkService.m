@@ -20,7 +20,6 @@ static NSString *T8BaseNetworkUrl = nil;
         shareInstance = [AFHTTPRequestOperationManager manager];
         shareInstance.responseSerializer = [AFJSONResponseSerializer serializer];
         shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
-
     });
     
     return shareInstance;

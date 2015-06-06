@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 #import "DemoService.h"
+#import "T8SocketService.h"
+#import <Foundation/Foundation.h>
 
 @interface ViewController ()
 
@@ -20,9 +22,12 @@
     
     [T8BaseNetworkService setBaseUrl:@"http://123.56.100.23:8080/bloodstone"];
     
-    [DemoService testRequestWithUserid:@"5565bddd36396439351e7dc7" device:@"ip" block:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
-        NSLog(@"tt:%@", data);
-    }];
+//    [DemoService testRequestWithUserid:@"5565bddd36396439351e7dc7" device:@"ip" block:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+//        NSLog(@"tt:%@", data);
+//    }];
+    
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"user_id", @"5565bddd36396439351e7dc7", @"device_id", @"device1", @"token", @"dG9rZW46ODBlN2ZlZDFhZDdiNDE2OTljN2JlNDc5YTMzZGZkZmY6ZXhwaXJlOjIzNzk0OTI1ODQ0MDQ%3d" , nil];
+    [[T8SocketService sharedInstance] connectWithUrlWithPort:@"10.0.0.6:3000" andParams:params];
     
     // Do any additional setup after loading the view, typically from a nib.
 }

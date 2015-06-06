@@ -7,6 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A26FEF9260E0E19AABF615E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98CD040C5E8DEC1D84890B44 /* libPods.a */; };
+		6D25D97A1B22D1E100588FDF /* SocketAckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D96D1B22D1E100588FDF /* SocketAckManager.swift */; };
+		6D25D97B1B22D1E100588FDF /* SocketAnyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D96E1B22D1E100588FDF /* SocketAnyEvent.swift */; };
+		6D25D97C1B22D1E100588FDF /* SocketEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D96F1B22D1E100588FDF /* SocketEngine.swift */; };
+		6D25D97D1B22D1E100588FDF /* SocketEngineClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9701B22D1E100588FDF /* SocketEngineClient.swift */; };
+		6D25D97E1B22D1E100588FDF /* SocketEventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9711B22D1E100588FDF /* SocketEventHandler.swift */; };
+		6D25D97F1B22D1E100588FDF /* SocketFixUTF8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9721B22D1E100588FDF /* SocketFixUTF8.swift */; };
+		6D25D9801B22D1E100588FDF /* SocketIOClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9731B22D1E100588FDF /* SocketIOClient.swift */; };
+		6D25D9811B22D1E100588FDF /* SocketLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9741B22D1E100588FDF /* SocketLogger.swift */; };
+		6D25D9821B22D1E100588FDF /* SocketPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9751B22D1E100588FDF /* SocketPacket.swift */; };
+		6D25D9831B22D1E100588FDF /* SocketParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9761B22D1E100588FDF /* SocketParser.swift */; };
+		6D25D9841B22D1E100588FDF /* SocketTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9771B22D1E100588FDF /* SocketTypes.swift */; };
+		6D25D9851B22D1E100588FDF /* SwiftRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9781B22D1E100588FDF /* SwiftRegex.swift */; };
+		6D25D9861B22D1E100588FDF /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9791B22D1E100588FDF /* WebSocket.swift */; };
+		6D25D9891B22E02200588FDF /* T8SocketService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25D9881B22E02200588FDF /* T8SocketService.m */; };
 		6DB9EF3D1B19B21200355150 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF3C1B19B21200355150 /* main.m */; };
 		6DB9EF401B19B21200355150 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF3F1B19B21200355150 /* AppDelegate.m */; };
 		6DB9EF431B19B21200355150 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF421B19B21200355150 /* ViewController.m */; };
@@ -17,7 +32,6 @@
 		6DB9EF691B19BDCF00355150 /* DemoService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF681B19BDCF00355150 /* DemoService.m */; };
 		6DC395DF1B1BFCF100270D0D /* T8BaseNetworkService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC395DC1B1BFCF100270D0D /* T8BaseNetworkService.m */; };
 		6DC395E01B1BFCF100270D0D /* T8NetworkError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DC395DE1B1BFCF100270D0D /* T8NetworkError.m */; };
-		CF6F0D8847893293C993568E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3DB72653A9C137ACA389861 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +45,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6D25D96D1B22D1E100588FDF /* SocketAckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketAckManager.swift; sourceTree = "<group>"; };
+		6D25D96E1B22D1E100588FDF /* SocketAnyEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketAnyEvent.swift; sourceTree = "<group>"; };
+		6D25D96F1B22D1E100588FDF /* SocketEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketEngine.swift; sourceTree = "<group>"; };
+		6D25D9701B22D1E100588FDF /* SocketEngineClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketEngineClient.swift; sourceTree = "<group>"; };
+		6D25D9711B22D1E100588FDF /* SocketEventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketEventHandler.swift; sourceTree = "<group>"; };
+		6D25D9721B22D1E100588FDF /* SocketFixUTF8.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketFixUTF8.swift; sourceTree = "<group>"; };
+		6D25D9731B22D1E100588FDF /* SocketIOClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOClient.swift; sourceTree = "<group>"; };
+		6D25D9741B22D1E100588FDF /* SocketLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketLogger.swift; sourceTree = "<group>"; };
+		6D25D9751B22D1E100588FDF /* SocketPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketPacket.swift; sourceTree = "<group>"; };
+		6D25D9761B22D1E100588FDF /* SocketParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketParser.swift; sourceTree = "<group>"; };
+		6D25D9771B22D1E100588FDF /* SocketTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketTypes.swift; sourceTree = "<group>"; };
+		6D25D9781B22D1E100588FDF /* SwiftRegex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftRegex.swift; sourceTree = "<group>"; };
+		6D25D9791B22D1E100588FDF /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
+		6D25D9871B22E02200588FDF /* T8SocketService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8SocketService.h; sourceTree = "<group>"; };
+		6D25D9881B22E02200588FDF /* T8SocketService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8SocketService.m; sourceTree = "<group>"; };
 		6DB9EF371B19B21200355150 /* T8AFNetworkKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = T8AFNetworkKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB9EF3B1B19B21200355150 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6DB9EF3C1B19B21200355150 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -52,7 +81,7 @@
 		6DC395DE1B1BFCF100270D0D /* T8NetworkError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8NetworkError.m; sourceTree = "<group>"; };
 		81FA36F4E9DA2F53340C1AC7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		9457D02E3883CEEE779BD831 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		E3DB72653A9C137ACA389861 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		98CD040C5E8DEC1D84890B44 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF6F0D8847893293C993568E /* libPods.a in Frameworks */,
+				6A26FEF9260E0E19AABF615E /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +103,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6D25D96C1B22D1E100588FDF /* SocketIOClientSwift */ = {
+			isa = PBXGroup;
+			children = (
+				6D25D96D1B22D1E100588FDF /* SocketAckManager.swift */,
+				6D25D96E1B22D1E100588FDF /* SocketAnyEvent.swift */,
+				6D25D96F1B22D1E100588FDF /* SocketEngine.swift */,
+				6D25D9701B22D1E100588FDF /* SocketEngineClient.swift */,
+				6D25D9711B22D1E100588FDF /* SocketEventHandler.swift */,
+				6D25D9721B22D1E100588FDF /* SocketFixUTF8.swift */,
+				6D25D9731B22D1E100588FDF /* SocketIOClient.swift */,
+				6D25D9741B22D1E100588FDF /* SocketLogger.swift */,
+				6D25D9751B22D1E100588FDF /* SocketPacket.swift */,
+				6D25D9761B22D1E100588FDF /* SocketParser.swift */,
+				6D25D9771B22D1E100588FDF /* SocketTypes.swift */,
+				6D25D9781B22D1E100588FDF /* SwiftRegex.swift */,
+				6D25D9791B22D1E100588FDF /* WebSocket.swift */,
+			);
+			name = SocketIOClientSwift;
+			path = ../../../../Desktop/go/go/SocketIOClientSwift;
+			sourceTree = "<group>";
+		};
 		6DB9EF2E1B19B21100355150 = {
 			isa = PBXGroup;
 			children = (
@@ -141,10 +191,13 @@
 		6DC395DA1B1BFCF100270D0D /* T8AFNetworkKit */ = {
 			isa = PBXGroup;
 			children = (
+				6D25D96C1B22D1E100588FDF /* SocketIOClientSwift */,
 				6DC395DB1B1BFCF100270D0D /* T8BaseNetworkService.h */,
 				6DC395DC1B1BFCF100270D0D /* T8BaseNetworkService.m */,
 				6DC395DD1B1BFCF100270D0D /* T8NetworkError.h */,
 				6DC395DE1B1BFCF100270D0D /* T8NetworkError.m */,
+				6D25D9871B22E02200588FDF /* T8SocketService.h */,
+				6D25D9881B22E02200588FDF /* T8SocketService.m */,
 			);
 			name = T8AFNetworkKit;
 			path = ../../T8AFNetworkKit;
@@ -162,7 +215,7 @@
 		FBB55A5CBDAC9CDBAAE388B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E3DB72653A9C137ACA389861 /* libPods.a */,
+				98CD040C5E8DEC1D84890B44 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -304,10 +357,24 @@
 			files = (
 				6DB9EF431B19B21200355150 /* ViewController.m in Sources */,
 				6DB9EF691B19BDCF00355150 /* DemoService.m in Sources */,
+				6D25D97B1B22D1E100588FDF /* SocketAnyEvent.swift in Sources */,
+				6D25D9831B22D1E100588FDF /* SocketParser.swift in Sources */,
+				6D25D97D1B22D1E100588FDF /* SocketEngineClient.swift in Sources */,
+				6D25D9811B22D1E100588FDF /* SocketLogger.swift in Sources */,
 				6DB9EF401B19B21200355150 /* AppDelegate.m in Sources */,
+				6D25D9841B22D1E100588FDF /* SocketTypes.swift in Sources */,
+				6D25D97E1B22D1E100588FDF /* SocketEventHandler.swift in Sources */,
 				6DC395DF1B1BFCF100270D0D /* T8BaseNetworkService.m in Sources */,
 				6DB9EF3D1B19B21200355150 /* main.m in Sources */,
+				6D25D9851B22D1E100588FDF /* SwiftRegex.swift in Sources */,
+				6D25D97C1B22D1E100588FDF /* SocketEngine.swift in Sources */,
+				6D25D9861B22D1E100588FDF /* WebSocket.swift in Sources */,
+				6D25D9821B22D1E100588FDF /* SocketPacket.swift in Sources */,
+				6D25D97F1B22D1E100588FDF /* SocketFixUTF8.swift in Sources */,
+				6D25D9801B22D1E100588FDF /* SocketIOClient.swift in Sources */,
 				6DC395E01B1BFCF100270D0D /* T8NetworkError.m in Sources */,
+				6D25D9891B22E02200588FDF /* T8SocketService.m in Sources */,
+				6D25D97A1B22D1E100588FDF /* SocketAckManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +435,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -386,6 +454,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = T8AFNetworkKitDemo;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -409,6 +478,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -420,6 +490,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_MODULE_NAME = T8AFNetworkKitDemo;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
