@@ -96,6 +96,7 @@ Pod::Spec.new do |s|
 
   s.subspec "SocketIOClientSwift" do |ss|
     ss.source_files = "T8AFNetworkKit/SocketIOClientSwift/*.{swift}"
+  end
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
