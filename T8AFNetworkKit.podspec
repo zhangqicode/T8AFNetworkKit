@@ -95,7 +95,7 @@ Pod::Spec.new do |s|
   # s.public_header_files = "Classes/**/*.h"
 
   s.subspec "SocketIOClientSwift" do |ss|
-    ss.source_files = "T8AFNetworkKit/SocketIOClientSwift/*.{h,m}"
+    ss.source_files = "T8AFNetworkKit/SocketIOClientSwift/*.{swift}"
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
