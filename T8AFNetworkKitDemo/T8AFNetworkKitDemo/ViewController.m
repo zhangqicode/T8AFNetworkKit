@@ -26,7 +26,7 @@
 //        NSLog(@"tt:%@", data);
 //    }];
     
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"user_id", @"5565bddd36396439351e7dc7", @"device_id", @"device1", @"token", @"dG9rZW46ODBlN2ZlZDFhZDdiNDE2OTljN2JlNDc5YTMzZGZkZmY6ZXhwaXJlOjIzNzk0OTI1ODQ0MDQ%3d" , nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:@"5565bddd36396439351e7dc7", @"user_id", @"device1", @"device_id", @"dG9rZW46ODBlN2ZlZDFhZDdiNDE2OTljN2JlNDc5YTMzZGZkZmY6ZXhwaXJlOjIzNzk0OTI1ODQ0MDQ=", @"token" , nil];
     [[T8SocketService sharedInstance] connectWithUrlWithPort:@"10.0.0.6:3000" andParams:params];
     
     // Do any additional setup after loading the view, typically from a nib.

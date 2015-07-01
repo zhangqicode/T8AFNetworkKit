@@ -32,7 +32,7 @@
     if (self.socketClient.connected || self.socketClient.connecting) {
         [self.socketClient disconnectWithFast:YES];
     }
-    self.socketClient = [[SocketIOClient alloc] initWithSocketURL:urlWithPort options:params];
+    self.socketClient = [[SocketIOClient alloc] initWithSocketURL:urlWithPort options:[NSDictionary dictionaryWithObject:params forKey:@"connectParams"]];
     __weak typeof(self) weakSelf = self;
     [self.socketClient onAny:^(SocketAnyEvent * __nonnull socketEvent) {
         NSLog(@"event:%@, items:%@", socketEvent.event, socketEvent.items);
