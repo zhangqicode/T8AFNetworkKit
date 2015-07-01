@@ -79,7 +79,7 @@ static NSString *T8BaseNetworkUrl = nil;
                                                  if (json && [json isKindOfClass:[NSDictionary class]] && (json.count > 0))
                                                  {
                                                      // 看是否出错
-                                                     if ([[json allKeys] containsObject:@"code"] && [json[@"code"] intValue] != 0)
+                                                     if ([[json allKeys] containsObject:@"code"] && [json[@"code"] intValue] != 1)
                                                      {
                                                          // 出错啦，取错误信息
                                                          NSString *errorMsg = json[@"msg"];
