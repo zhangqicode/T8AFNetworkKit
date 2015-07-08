@@ -9,6 +9,7 @@
 #import "T8BaseNetworkService.h"
 
 static NSString *T8BaseNetworkUrl = nil;
+static RequestHandleBlock T8RequestHandleBlock = nil;
 
 @implementation T8BaseNetworkService
 
@@ -29,6 +30,11 @@ static NSString *T8BaseNetworkUrl = nil;
 + (void)setBaseUrl:(NSString *)baseUrl
 {
     T8BaseNetworkUrl = baseUrl;
+}
+
++ (void)setHandleBlock:(RequestHandleBlock)handleBlock
+{
+    T8RequestHandleBlock = handleBlock;
 }
 
 + (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
@@ -59,6 +65,9 @@ static NSString *T8BaseNetworkUrl = nil;
     
     AFHTTPRequestOperationManager *op = [self shareInstance];
     NSMutableURLRequest *request = [op.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
     AFHTTPRequestOperation *operation = [op HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation __unused *operation, id responseObject)
                                          {
                                              NSDictionary *resJson = responseObject;
@@ -109,6 +118,29 @@ static NSString *T8BaseNetworkUrl = nil;
                                          }];
     
     [op.operationQueue addOperation:operation];
+}
+
++ (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename completBlock:(RequestComplete)completBlock;
+{
+    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    
+    NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:strUrlPath parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:imageData name:filename fileName:filename mimeType:@"image/jpg"];
+    } error:nil];
+    
+    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        completBlock(RequestStatusSuccess, responseObject, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        T8NetworkError *e = [T8NetworkError errorWithNSError:error];
+        completBlock(RequestStatusFailure, nil, e);
+    }];
+    
+    [manager.operationQueue addOperation:option];
+    
+    [option setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        
+        
+    }];
 }
 
 + (NSString *)getRequestUrl:(NSString *)path

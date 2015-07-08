@@ -26,13 +26,16 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
 };
 
 typedef void(^RequestComplete)(RequestStatus status, NSDictionary *data, T8NetworkError *error);
+typedef void(^RequestHandleBlock)(NSMutableURLRequest *request);
 
 @interface T8BaseNetworkService : NSObject
 
-+ (AFHTTPRequestOperationManager *)shareInstance;
-
 + (void)setBaseUrl:(NSString *)baseUrl;
 
++ (void)setHandleBlock:(RequestHandleBlock)handleBlock;
+
 + (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
+
++ (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename completBlock:(RequestComplete)completBlock;
 
 @end
