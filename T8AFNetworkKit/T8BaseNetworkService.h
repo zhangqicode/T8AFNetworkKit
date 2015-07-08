@@ -29,6 +29,8 @@ typedef void(^RequestComplete)(RequestStatus status, NSDictionary *data, T8Netwo
 
 @interface T8BaseNetworkService : NSObject
 
++ (AFHTTPRequestOperationManager *)shareInstance;
+
 + (void)setBaseUrl:(NSString *)baseUrl;
 
 + (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
