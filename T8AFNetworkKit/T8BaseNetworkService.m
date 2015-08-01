@@ -127,6 +127,9 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:strUrlPath parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileData:imageData name:filename fileName:filename mimeType:@"image/jpg"];
     } error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
     
     AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
         completBlock(RequestStatusSuccess, responseObject, nil);
