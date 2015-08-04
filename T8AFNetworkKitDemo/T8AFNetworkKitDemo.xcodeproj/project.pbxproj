@@ -218,6 +218,7 @@
 				TargetAttributes = {
 					6DB9EF361B19B21200355150 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = G4NS45RA39;
 					};
 					6DB9EF4F1B19B21200355150 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -430,6 +431,7 @@
 			baseConfigurationReference = 81FA36F4E9DA2F53340C1AC7 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = T8AFNetworkKitDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -441,6 +443,7 @@
 			baseConfigurationReference = 9457D02E3883CEEE779BD831 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = T8AFNetworkKitDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

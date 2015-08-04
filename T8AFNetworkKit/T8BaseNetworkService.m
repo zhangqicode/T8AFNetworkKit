@@ -122,6 +122,11 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
 
 + (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename completBlock:(RequestComplete)completBlock;
 {
+    [self uploadImage:imageData urlPath:strUrlPath filename:filename progressBlock:nil completBlock:completBlock];
+}
+
++ (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
+{
     AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
     
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -139,11 +144,40 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     }];
     
     [manager.operationQueue addOperation:option];
+   
+    if (progressBlock) {
+        [option setUploadProgressBlock:progressBlock];
+    }
+}
+
++ (void)uploadVideo:(NSURL *)videoUrl urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)mutDict completeBlock:(RequestComplete)completeBlock
+{
+    [self uploadVideo:videoUrl urlPath:strUrlPath filename:filename progressBlock:nil params:mutDict completeBlock:completeBlock];
+}
+
++ (void)uploadVideo:(NSURL *)videoUrl urlPath:(NSString *)strUrlPath filename:(NSString *)filename progressBlock:(RequestProgressBlock)progressBlock params:(NSMutableDictionary *)mutDict completeBlock:(RequestComplete)completeBlock
+{
+    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
     
-    [option setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        
-        
+    NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:mutDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileURL:videoUrl name:filename error:nil];
+    } error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
+    
+    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        completeBlock(RequestStatusSuccess, responseObject, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        T8NetworkError *e = [T8NetworkError errorWithNSError:error];
+        completeBlock(RequestStatusFailure, nil, e);
     }];
+    
+    [manager.operationQueue addOperation:option];
+    
+    if (progressBlock) {
+        [option setUploadProgressBlock:progressBlock];
+    }
 }
 
 + (NSString *)getRequestUrl:(NSString *)path
