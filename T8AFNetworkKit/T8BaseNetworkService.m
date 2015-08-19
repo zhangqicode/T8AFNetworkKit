@@ -93,7 +93,7 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
                                                          // 出错啦，取错误信息
                                                          NSString *errorMsg = json[@"message"];
                                                          T8NetworkError *e = [T8NetworkError errorWithCode:[json[@"code"] integerValue] errorMessage:errorMsg];
-                                                         completeBlock(RequestStatusFailure, nil, e);
+                                                         completeBlock(RequestStatusFailure, json, e);
                                                          NSLog(@"\n请求接口：%@\n错误信息：%@", strUrlPath, errorMsg);
                                                      }else{
                                                          // 接口调用成功
