@@ -180,6 +180,36 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     }
 }
 
++ (void)uploadVideoWithParams:(NSMutableDictionary *)params mediaUrl:(NSURL *)mediaUrl path:(NSString *)path uploadCompletion:(void (^)(NSURLResponse *, id, NSError *))completionBlock progressBlock:(void (^)(NSURLSessionUploadTask *))progressBlock
+{
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:path] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileURL:mediaUrl name:@"filefield" error:nil];
+    } error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
+    
+    NSString* tmpFilename = [NSString stringWithFormat:@"%f", NSDate.timeIntervalSinceReferenceDate];
+    NSURL* tmpFileUrl = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:tmpFilename]];
+    
+    [AFHTTPRequestSerializer.serializer requestWithMultipartFormRequest:request writingStreamContentsToFile:tmpFileUrl completionHandler:^(NSError *error) {
+        // Once the multipart form is serialized into a temporary file, we can initialize
+        // the actual HTTP request using session manager.
+        // Create default session manager.
+        AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration];
+        manager.responseSerializer = [AFHTTPResponseSerializer serializer]; //很重要，去掉会出现Content-Type错误
+        // Here note that we are submitting the initial multipart request. We are, however,
+        // forcing the body stream to be read from the temporary file.
+        NSURLSessionUploadTask *uploadTask = [manager uploadTaskWithRequest:request fromFile:tmpFileUrl progress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+            // Cleanup: remove temporary file.
+            [NSFileManager.defaultManager removeItemAtURL:tmpFileUrl error:nil];
+            completionBlock(response, responseObject, error);
+        }];
+        
+        progressBlock(uploadTask);
+    }];
+}
+
 + (NSString *)getRequestUrl:(NSString *)path
 {
     if ([path hasPrefix:@"http"]) {
