@@ -71,8 +71,9 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     AFHTTPRequestOperation *operation = [op HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation __unused *operation, id responseObject)
                                          {
                                              NSDictionary *resJson = responseObject;
-                                             
+#ifndef __OPTIMIZE__
                                              NSLog(@"\n请求接口：%@\n请求的结果：%@\n", strUrlPath, resJson);
+#endif
                                              dispatch_async(dispatch_get_main_queue(), ^{
                                                  NSDictionary *json = nil;
                                                  
@@ -94,21 +95,27 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
                                                          NSString *errorMsg = json[@"message"];
                                                          T8NetworkError *e = [T8NetworkError errorWithCode:[json[@"code"] integerValue] errorMessage:errorMsg];
                                                          completeBlock(RequestStatusFailure, json, e);
+#ifndef __OPTIMIZE__
                                                          NSLog(@"\n请求接口：%@\n错误信息：%@", strUrlPath, errorMsg);
+#endif
                                                      }else{
                                                          // 接口调用成功
                                                          completeBlock(RequestStatusSuccess, json, nil);
                                                      }
                                                  }else{
                                                      // 接口数据为空
+#ifndef __OPTIMIZE__
                                                      NSLog(@"\n请求接口：%@\n接口数据异常", strUrlPath);
+#endif
                                                      T8NetworkError *e = [T8NetworkError errorWithCode:-1 errorMessage:@"数据异常"];
                                                      completeBlock(RequestStatusFailure, @{}, e);
                                                  }
                                              });
                                              
                                          } failure:^(AFHTTPRequestOperation __unused *operation, NSError *error) {
+#ifndef __OPTIMIZE__
                                              NSLog(@"\n网络错误，请求的错误提示：%@\n", error);
+#endif
                                              dispatch_async(dispatch_get_main_queue(), ^{
                                                  if (completeBlock != nil) {
                                                      T8NetworkError *e = [T8NetworkError errorWithNSError:error];
