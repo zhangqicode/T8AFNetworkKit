@@ -39,6 +39,11 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
 
 + (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
 {
+    [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock cachePolicy:-1];
+}
+
++ (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock cachePolicy:(NSURLRequestCachePolicy)policy
+{
     NSString *method;
     switch (httpMethod) {
         case HttpMethodGet:
@@ -65,6 +70,7 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     
     AFHTTPRequestOperationManager *op = [self shareInstance];
     NSMutableURLRequest *request = [op.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:nil];
+    request.cachePolicy = policy;
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
@@ -125,6 +131,21 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
                                          }];
     
     [op.operationQueue addOperation:operation];
+}
+
++ (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache
+{
+    if (cache) {
+        [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+            if (status == RequestStatusSuccess) {
+                completeBlock(status, data, error);
+            }else{
+                [T8BaseNetworkService sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock cachePolicy:NSURLRequestReturnCacheDataDontLoad];
+            }
+        }];
+    }else{
+        [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock];
+    }
 }
 
 + (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename completBlock:(RequestComplete)completBlock;
