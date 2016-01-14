@@ -183,6 +183,35 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     }
 }
 
++ (void)uploadImageDataArray:(NSArray *)imageDataArray urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
+{
+    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    
+    NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        for (int i = 0; i<imageDataArray.count; i++) {
+            NSData *uploadImageData = imageDataArray[i];
+            NSString *name = [NSString stringWithFormat:@"%@%d",filename,i];
+            [formData appendPartWithFileData:uploadImageData name:name fileName:name mimeType:@"image/jpg"];
+        }
+    } error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
+    
+    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        completBlock(RequestStatusSuccess, responseObject, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        T8NetworkError *e = [T8NetworkError errorWithNSError:error];
+        completBlock(RequestStatusFailure, nil, e);
+    }];
+    
+    [manager.operationQueue addOperation:option];
+    
+    if (progressBlock) {
+        [option setUploadProgressBlock:progressBlock];
+    }
+}
+
 + (void)uploadVideo:(NSURL *)videoUrl urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)mutDict completeBlock:(RequestComplete)completeBlock
 {
     [self uploadVideo:videoUrl urlPath:strUrlPath filename:filename progressBlock:nil params:mutDict completeBlock:completeBlock];
