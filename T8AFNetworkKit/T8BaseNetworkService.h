@@ -53,6 +53,17 @@ typedef void(^RequestProgressBlock)(NSUInteger bytesWritten, long long totalByte
 
 + (void)uploadVideoWithParams:(NSMutableDictionary *)params mediaUrl:(NSURL *)mediaUrl path:(NSString *)path uploadCompletion:(void (^)(NSURLResponse *, id, NSError *))completionBlock progressBlock:(void (^)(NSURLSessionUploadTask *))progressBlock;
 
+/**
+ *  上传一个数组的文件
+ *
+ *  @param files         每个元素是一个字典，包括type（"data","path"两种方式），data（如果type是data，类型是NSData），path（如果type是path，类型是string），filename，mimetype（图片是"image/jpg"，视频是"video/mpeg"）
+ *  @param strUrlPath
+ *  @param params
+ *  @param progressBlock
+ *  @param completBlock  
+ */
++ (void)uploadFiles:(NSArray *)files urlPath:(NSString *)strUrlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock;
+
 + (NSString *)getRequestUrl:(NSString *)path;
 
 @end

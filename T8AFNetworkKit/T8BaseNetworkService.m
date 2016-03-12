@@ -272,6 +272,56 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     }];
 }
 
+/**
+ *  上传一个数组的文件
+ *
+ *  @param files         每个元素是一个字典，包括type（"data","path"两种方式），data（如果type是data，类型是NSData），path（如果type是path，类型是string），filename，mimetype（图片是"image/jpg"，视频是"video/mpeg"）
+ *  @param strUrlPath
+ *  @param params
+ *  @param progressBlock
+ *  @param completBlock
+ */
++ (void)uploadFiles:(NSArray *)files urlPath:(NSString *)strUrlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
+{
+    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    
+    NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        for (int i = 0; i<files.count; i++) {
+            NSDictionary *fileDict = files[i];
+            NSString *type = [fileDict objectForKey:@"type"];
+            NSString *filename = [fileDict objectForKey:@"filename"]?[fileDict objectForKey:@"filename"]:@"";
+            NSString *mimetype = [fileDict objectForKey:@"mimetype"]?[fileDict objectForKey:@"mimetype"]:@"";
+            if ([type isEqualToString:@"data"]) {
+                NSData *data = [fileDict objectForKey:@"data"];
+                if (data) {
+                    [formData appendPartWithFileData:data name:filename fileName:filename mimeType:mimetype];
+                }
+            }else if ([type isEqualToString:@"path"]){
+                NSString *path = [fileDict objectForKey:@"path"];
+                if (path.length > 0) {
+                    [formData appendPartWithFileURL:[NSURL URLWithString:path] name:filename fileName:filename mimeType:mimetype error:nil];
+                }
+            }
+        }
+    } error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
+    
+    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        completBlock(RequestStatusSuccess, responseObject, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        T8NetworkError *e = [T8NetworkError errorWithNSError:error];
+        completBlock(RequestStatusFailure, nil, e);
+    }];
+    
+    [manager.operationQueue addOperation:option];
+    
+    if (progressBlock) {
+        [option setUploadProgressBlock:progressBlock];
+    }
+}
+
 + (NSString *)getRequestUrl:(NSString *)path
 {
     if ([path hasPrefix:@"http"]) {
