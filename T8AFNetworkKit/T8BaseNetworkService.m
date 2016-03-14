@@ -77,7 +77,7 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     AFHTTPRequestOperation *operation = [op HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation __unused *operation, id responseObject)
                                          {
                                              NSDictionary *resJson = responseObject;
-#ifdef __OPTIMIZE__
+#ifndef __OPTIMIZE__
                                              NSLog(@"\n请求接口：%@\n请求的结果：%@\n", strUrlPath, resJson);
 #endif
                                              dispatch_async(dispatch_get_main_queue(), ^{
@@ -101,7 +101,7 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
                                                          NSString *errorMsg = json[@"message"];
                                                          T8NetworkError *e = [T8NetworkError errorWithCode:[json[@"code"] integerValue] errorMessage:errorMsg];
                                                          completeBlock(RequestStatusFailure, json, e);
-#ifdef __OPTIMIZE__
+#ifndef __OPTIMIZE__
                                                          NSLog(@"\n请求接口：%@\n错误信息：%@", strUrlPath, errorMsg);
 #endif
                                                      }else{
@@ -110,7 +110,7 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
                                                      }
                                                  }else{
                                                      // 接口数据为空
-#ifdef __OPTIMIZE__
+#ifndef __OPTIMIZE__
                                                      NSLog(@"\n请求接口：%@\n接口数据异常", strUrlPath);
 #endif
                                                      T8NetworkError *e = [T8NetworkError errorWithCode:-1 errorMessage:@"数据异常"];
@@ -119,7 +119,7 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
                                              });
                                              
                                          } failure:^(AFHTTPRequestOperation __unused *operation, NSError *error) {
-#ifdef __OPTIMIZE__
+#ifndef __OPTIMIZE__
                                              NSLog(@"\n网络错误，请求的错误提示：%@\n", error);
 #endif
                                              dispatch_async(dispatch_get_main_queue(), ^{
