@@ -19,9 +19,9 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shareInstance = [AFHTTPRequestOperationManager manager];
+        shareInstance.completionQueue = dispatch_queue_create("com.tinfinite.network.completionqueue", DISPATCH_QUEUE_CONCURRENT);
         shareInstance.responseSerializer = [AFJSONResponseSerializer serializer];
         shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
-
     });
     
     return shareInstance;
@@ -286,47 +286,35 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
 
 + (void)handleSuccesss:(AFHTTPRequestOperation *)operation response:(id)responseObject block:(RequestComplete)completeBlock
 {
-    NSDictionary *resJson = responseObject;
 #ifndef __OPTIMIZE__
-    NSLog(@"\n请求接口：%@\n请求的结果：%@\n", operation.request.URL.absoluteString, resJson);
+    NSLog(@"\n请求接口：%@\n请求的结果：%@\n", operation.request.URL.absoluteString, responseObject);
 #endif
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSDictionary *json = nil;
-        
-        if (resJson) {
-            if ([resJson isKindOfClass:[NSArray class]]) {
-                // 兼容NSArray的情况
-                json = @{@"array":resJson};
-            } else {
-                json = [NSDictionary dictionaryWithDictionary:resJson];
-            }
-        }
-        
-        if (json && [json isKindOfClass:[NSDictionary class]] && (json.count > 0))
+    NSDictionary *json = responseObject;
+    
+    if (json && [json isKindOfClass:[NSDictionary class]] && (json.count > 0))
+    {
+        // 看是否出错
+        if ([[json allKeys] containsObject:@"code"] && [json[@"code"] intValue] != 1)
         {
-            // 看是否出错
-            if ([[json allKeys] containsObject:@"code"] && [json[@"code"] intValue] != 1)
-            {
-                // 出错啦，取错误信息
-                NSString *errorMsg = json[@"message"];
-                T8NetworkError *e = [T8NetworkError errorWithCode:[json[@"code"] integerValue] errorMessage:errorMsg];
-                completeBlock(RequestStatusFailure, json, e);
+            // 出错啦，取错误信息
+            NSString *errorMsg = json[@"message"];
+            T8NetworkError *e = [T8NetworkError errorWithCode:[json[@"code"] integerValue] errorMessage:errorMsg];
+            completeBlock(RequestStatusFailure, json, e);
 #ifndef __OPTIMIZE__
-                NSLog(@"\n请求接口：%@\n错误信息：%@", operation.request.URL.absoluteString, errorMsg);
+            NSLog(@"\n请求接口：%@\n错误信息：%@", operation.request.URL.absoluteString, errorMsg);
 #endif
-            }else{
-                // 接口调用成功
-                completeBlock(RequestStatusSuccess, json, nil);
-            }
         }else{
-            // 接口数据为空
-#ifndef __OPTIMIZE__
-            NSLog(@"\n请求接口：%@\n接口数据异常", operation.request.URL.absoluteString);
-#endif
-            T8NetworkError *e = [T8NetworkError errorWithCode:-1 errorMessage:@"数据异常"];
-            completeBlock(RequestStatusFailure, @{}, e);
+            // 接口调用成功
+            completeBlock(RequestStatusSuccess, json, nil);
         }
-    });
+    }else{
+        // 接口数据为空
+#ifndef __OPTIMIZE__
+        NSLog(@"\n请求接口：%@\n接口数据异常", operation.request.URL.absoluteString);
+#endif
+        T8NetworkError *e = [T8NetworkError errorWithCode:-1 errorMessage:@"数据异常"];
+        completeBlock(RequestStatusFailure, @{}, e);
+    }
 }
 
 + (void)handleFail:(AFHTTPRequestOperation *)operation error:(NSError *)error block:(RequestComplete)completeBlock
@@ -334,12 +322,10 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
 #ifndef __OPTIMIZE__
     NSLog(@"\n网络错误，请求的错误提示：%@\n", error);
 #endif
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (completeBlock != nil) {
-            T8NetworkError *e = [T8NetworkError errorWithNSError:error];
-            completeBlock(RequestStatusFailure, nil, e);
-        }
-    });
+    if (completeBlock != nil) {
+        T8NetworkError *e = [T8NetworkError errorWithNSError:error];
+        completeBlock(RequestStatusFailure, nil, e);
+    }
 }
 
 @end
