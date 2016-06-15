@@ -28,12 +28,15 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
 typedef void(^RequestComplete)(RequestStatus status, NSDictionary *data, T8NetworkError *error);
 typedef void(^RequestHandleBlock)(NSMutableURLRequest *request);
 typedef void(^RequestProgressBlock)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
+typedef void(^RequestErrorHandleBlock)(NSDictionary *data);
 
 @interface T8BaseNetworkService : NSObject
 
 + (void)setBaseUrl:(NSString *)baseUrl;
 
 + (void)setHandleBlock:(RequestHandleBlock)handleBlock;
+
++ (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock;
 
 + (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
 

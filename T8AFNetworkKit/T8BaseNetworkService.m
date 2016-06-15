@@ -10,6 +10,7 @@
 
 static NSString *T8BaseNetworkUrl = nil;
 static RequestHandleBlock T8RequestHandleBlock = nil;
+static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
 
 @implementation T8BaseNetworkService
 
@@ -35,6 +36,11 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
 + (void)setHandleBlock:(RequestHandleBlock)handleBlock
 {
     T8RequestHandleBlock = handleBlock;
+}
+
++ (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock
+{
+    T8RequestErrorHandleBlock = errorHandleBlock;
 }
 
 + (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
@@ -300,6 +306,9 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
             NSString *errorMsg = json[@"message"];
             T8NetworkError *e = [T8NetworkError errorWithCode:[json[@"code"] integerValue] errorMessage:errorMsg];
             completeBlock(RequestStatusFailure, json, e);
+            if (T8RequestErrorHandleBlock) {
+                T8RequestErrorHandleBlock(json);
+            }
 #ifndef __OPTIMIZE__
             NSLog(@"\n请求接口：%@\n错误信息：%@", operation.request.URL.absoluteString, errorMsg);
 #endif
