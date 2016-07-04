@@ -107,6 +107,52 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
     }
 }
 
++ (void)sendSyncRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
+{
+    NSString *method;
+    switch (httpMethod) {
+        case HttpMethodGet:
+            method = @"GET";
+            break;
+        case HttpMethodPost:
+            method = @"POST";
+            break;
+        case HttpMethodPut:
+            method = @"PUT";
+            break;
+        case HttpMethodDelete:
+            method = @"DELETE";
+            break;
+        case HttpMethodPatch:
+            method = @"PATCH";
+            break;
+        case HttpMethodHead:
+            method = @"HEAD";
+            break;
+        default:
+            break;
+    }
+    
+    AFHTTPRequestOperationManager *op = [self shareInstance];
+    NSMutableURLRequest *request = [op.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
+    
+    NSError *error = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+    if (error) {
+        [self handleFail:nil error:error block:completeBlock];
+    }else{
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error) {
+            [self handleFail:nil error:error block:completeBlock];
+        }else{
+            [self handleSuccesss:nil response:dict block:completeBlock];
+        }
+    }
+}
+
 + (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename completBlock:(RequestComplete)completBlock;
 {
     [self uploadImage:imageData urlPath:strUrlPath filename:filename progressBlock:nil completBlock:completBlock];
