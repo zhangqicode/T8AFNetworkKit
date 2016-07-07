@@ -23,6 +23,7 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
         shareInstance.completionQueue = dispatch_queue_create("com.tinfinite.network.completionqueue", DISPATCH_QUEUE_CONCURRENT);
         shareInstance.responseSerializer = [AFJSONResponseSerializer serializer];
         shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
+        shareInstance.requestSerializer.timeoutInterval = 10;
     });
     
     return shareInstance;
