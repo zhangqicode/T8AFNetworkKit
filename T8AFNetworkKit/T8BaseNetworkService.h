@@ -38,9 +38,9 @@ typedef void(^RequestErrorHandleBlock)(NSDictionary *data);
 
 + (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock;
 
-+ (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
++ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
 
-+ (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache;
++ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache;
 
 + (void)sendSyncRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
 
@@ -65,7 +65,7 @@ typedef void(^RequestErrorHandleBlock)(NSDictionary *data);
  *  @param strUrlPath
  *  @param params
  *  @param progressBlock
- *  @param completBlock  
+ *  @param completBlock
  */
 + (void)uploadFiles:(NSArray *)files urlPath:(NSString *)strUrlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock;
 

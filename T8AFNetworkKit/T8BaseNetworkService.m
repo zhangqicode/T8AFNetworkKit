@@ -44,12 +44,12 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
     T8RequestErrorHandleBlock = errorHandleBlock;
 }
 
-+ (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
++ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
 {
-    [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock cachePolicy:-1];
+    return [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock cachePolicy:-1];
 }
 
-+ (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock cachePolicy:(NSURLRequestCachePolicy)policy
++ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock cachePolicy:(NSURLRequestCachePolicy)policy
 {
     NSString *method;
     switch (httpMethod) {
@@ -91,12 +91,14 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
                                          }];
     
     [op.operationQueue addOperation:operation];
+    
+    return operation;
 }
 
-+ (void)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache
++ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache
 {
     if (cache) {
-        [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+        return [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
             if (status == RequestStatusSuccess) {
                 completeBlock(status, data, error);
             }else{
@@ -104,7 +106,7 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
             }
         }];
     }else{
-        [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock];
+        return [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock];
     }
 }
 
@@ -329,7 +331,7 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
     if ([path hasPrefix:@"http"]) {
         return path;
     }
-
+    
     if (T8BaseNetworkUrl.length>0) {
         return [NSString stringWithFormat:@"%@/%@", T8BaseNetworkUrl, path];
     }else{
