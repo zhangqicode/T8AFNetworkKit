@@ -24,6 +24,7 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
         shareInstance.responseSerializer = [AFJSONResponseSerializer serializer];
         shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
         shareInstance.requestSerializer.timeoutInterval = 10;
+        shareInstance.operationQueue.maxConcurrentOperationCount = 10;
     });
     
     return shareInstance;

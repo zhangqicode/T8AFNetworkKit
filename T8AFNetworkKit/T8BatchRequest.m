@@ -95,7 +95,7 @@
         request.completeDelegate = self;
         [request start];
         
-        [NSThread sleepForTimeInterval:0.01f];
+        [NSThread sleepForTimeInterval:0.05f];
     }
 }
 
