@@ -11,7 +11,9 @@
 #import "T8BatchRequest.h"
 #import "T8Request.h"
 
+
 typedef void(^ChainRequestCompleteBlock)(NSUInteger completeCount);
+
 
 @interface T8ChainRequest : NSObject <T8Request, T8RequestCompleteDelegate>
 
@@ -24,7 +26,7 @@ typedef void(^ChainRequestCompleteBlock)(NSUInteger completeCount);
  *
  *  @return T8ChainRequest对象
  */
-- (id)initWithRequests:(NSArray *)requests completeBlock:(BatchRequestCompleteBlock)completeBlock shouldComplete:(BOOL)shouldComplete;
+- (id)initWithRequests:(NSArray *)requests completeBlock:(ChainRequestCompleteBlock)completeBlock shouldComplete:(BOOL)shouldComplete;
 
 /**
  *  向当前请求队列中添加请求

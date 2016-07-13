@@ -11,12 +11,23 @@
 #import "T8Request.h"
 
 
+/**
+ *  批量网络请求完成的条件
+ */
 typedef NS_ENUM(NSInteger, BatchRequestCompleteCondiction) {
-    BatchRequestCompleteCondiction_AnyFailed = 0,       //  一旦某个请求失败了，那么整个批量请求也失败了。
-    BatchRequestCompleteCondiction_AllCompleted = 1,    //  所有请求必须都执行一遍
+    /**
+     *  一旦某个请求失败了，那么整个批量请求也失败了
+     */
+    BatchRequestCompleteCondiction_AnyFailed = 0,
+    /**
+     *  所有请求必须都执行一遍
+     */
+    BatchRequestCompleteCondiction_AllCompleted = 1,
 };
 
+
 typedef void(^BatchRequestCompleteBlock)(NSUInteger completeCount, NSUInteger succeedCount, NSUInteger failedCount);
+
 
 @interface T8BatchRequest : NSObject <T8Request, T8RequestCompleteDelegate>
 

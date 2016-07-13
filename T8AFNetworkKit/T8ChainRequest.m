@@ -25,7 +25,7 @@
 //  启动下一个请求
 - (void)startNextRequest;
 
-//  重置
+//  重置一些属性值
 - (void)reset;
 
 @end
@@ -56,7 +56,7 @@
     return self;
 }
 
-- (id)initWithRequests:(NSArray *)requests completeBlock:(BatchRequestCompleteBlock)completeBlock shouldComplete:(BOOL)shouldComplete
+- (id)initWithRequests:(NSArray *)requests completeBlock:(ChainRequestCompleteBlock)completeBlock shouldComplete:(BOOL)shouldComplete
 {
     self = [self init];
     if (self) {
@@ -71,20 +71,14 @@
 }
 
 
+#pragma mark -
+#pragma mark - T8Request Protocol
+
 - (void)start
 {
     [self reset];
     
     if (self.state == T8RequestState_Loading) {
-        return;
-    }
-    
-    if (!_requests || _requests.count <= 0) {
-        self.state = T8RequestState_CompletedSucceed;
-        if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
-            [self.completeDelegate requestCompleted:self];
-        }
-        
         return;
     }
     

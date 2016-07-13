@@ -25,4 +25,19 @@
     }];
 }
 
++ (T8BaseRequest *)getTestRequestWithUserid:(NSString *)userid device:(NSString *)device block:(RequestComplete)requestComplete
+{
+    NSString *urlPath = @"passport/accesstoken/get";
+    
+    NSMutableDictionary *mutDict = [NSMutableDictionary dictionary];
+    [mutDict setObject:userid forKey:@"user_id"];
+    [mutDict setObject:device forKey:@"device"];
+    
+    return [[T8BaseRequest alloc] initWithPath:urlPath httpMethod:HttpMethodGet params:mutDict completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+        if (requestComplete) {
+            requestComplete(status, data, error);
+        }
+    }];
+}
+
 @end

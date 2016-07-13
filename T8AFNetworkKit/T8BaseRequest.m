@@ -14,6 +14,7 @@
     id<T8RequestCompleteDelegate> _completeDelegate;
 }
 
+//  该请求对应的AFHTTPRequestOperation
 @property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @property (nonatomic, strong, readwrite) NSString *path;
@@ -31,6 +32,11 @@
 
 - (void)dealloc
 {
+    if (_requestOperation) {
+        [_requestOperation cancel];
+        _requestOperation = nil;
+    }
+    
     _completeBlock = nil;
 }
 
@@ -120,6 +126,10 @@
         [self.completeDelegate requestCompleted:self];
     }
 }
+
+
+#pragma mark -
+#pragma mark - completeDelegate get/set methods
 
 - (void)setCompleteDelegate:(id<T8RequestCompleteDelegate>)completeDelegate
 {

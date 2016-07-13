@@ -9,6 +9,11 @@
 #import "ViewController.h"
 #import "DemoService.h"
 
+#import "T8BaseRequest.h"
+#import "T8BatchRequest.h"
+#import "T8ChainRequest.h"
+
+
 @interface ViewController ()
 
 @end
@@ -25,6 +30,50 @@
     }];
     
     // Do any additional setup after loading the view, typically from a nib.
+    
+    
+    T8ChainRequest *chainRequest = [[T8ChainRequest alloc] initWithRequests:@[] completeBlock:^(NSUInteger completeCount) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"🎉🎉🎉🎉🎉🎉🎉🎉🎉chain request completed. completeCount:%d", completeCount);
+        });
+    } shouldComplete:NO];
+    [chainRequest start];
+    
+    
+    T8BaseRequest *request1 = [DemoService getTestRequestWithUserid:@"5565bddd36396439351e7dc7" device:@"ip" block:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"request1 completed");
+        });
+    }];
+    [chainRequest addRequest:request1 shouldComplete:NO];
+    
+    
+    NSMutableArray *requests = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < 10; i++) {
+        T8BaseRequest *request = [DemoService getTestRequestWithUserid:@"5565bddd36396439351e7dc7" device:@"ip" block:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"request completed");
+            });
+        }];
+        [requests addObject:request];
+    }
+    T8BatchRequest *batchRequest = [[T8BatchRequest alloc] initWithRequests:requests completeCondition:BatchRequestCompleteCondiction_AnyFailed completeBlock:^(NSUInteger completeCount, NSUInteger succeedCount, NSUInteger failedCount) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"chain request completed");
+        });
+    }];
+    
+    if (batchRequest) {
+        [chainRequest addRequest:batchRequest shouldComplete:NO];
+    }
+    
+    
+    T8BaseRequest *request2 = [DemoService getTestRequestWithUserid:@"5565bddd36396439351e7dc7" device:@"ip" block:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"request1 completed");
+        });
+    }];
+    [chainRequest addRequest:request2 shouldComplete:YES];
 }
 
 - (void)didReceiveMemoryWarning {

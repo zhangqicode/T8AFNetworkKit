@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "T8BaseNetworkService.h"
+#import "T8BaseRequest.h"
+
 
 @interface DemoService : NSObject
 
 + (void)testRequestWithUserid:(NSString *)userid device:(NSString *)device block:(RequestComplete)requestComplete;
+
++ (T8BaseRequest *)getTestRequestWithUserid:(NSString *)userid device:(NSString *)device block:(RequestComplete)requestComplete;
 
 @end
