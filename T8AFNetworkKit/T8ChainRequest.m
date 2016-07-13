@@ -89,10 +89,6 @@
 
 - (void)cancel
 {
-    if (!_requests || _requests.count <= 0) {
-        return;
-    }
-    
     for (id<T8Request> request in _requests) {
         [request cancel];
     }
