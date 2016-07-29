@@ -32,12 +32,11 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     
-    T8ChainRequest *chainRequest = [[T8ChainRequest alloc] initWithRequests:@[] completeBlock:^(NSUInteger completeCount) {
+    T8ChainRequest *chainRequest = [[T8ChainRequest alloc] initWithRequests:@[] completeCondition:ChainRequestCompleteCondiction_AllRequested completeBlock:^(NSUInteger completeCount, NSUInteger succeedCount, NSUInteger failedCount) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"🎉🎉🎉🎉🎉🎉🎉🎉🎉chain request completed. completeCount:%d", completeCount);
+            NSLog(@"🎉🎉🎉🎉🎉🎉🎉🎉🎉chain request completed. completeCount:%d succeedCount:%d failedCount:%d", completeCount, succeedCount, failedCount);
         });
     } shouldComplete:NO];
-    [chainRequest start];
     
     
     T8BaseRequest *request1 = [DemoService getTestRequestWithUserid:@"5565bddd36396439351e7dc7" device:@"ip" block:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {

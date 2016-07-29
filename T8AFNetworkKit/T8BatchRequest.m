@@ -45,7 +45,7 @@
 {
     self = [super init];
     if (self) {
-        _completeCondition = BatchRequestCompleteCondiction_AnyFailed;
+        _completeCondition = BatchRequestCompleteCondiction_AllRequested;
         _completeBlock = nil;
         
         _completeCount = 0;
@@ -75,6 +75,11 @@
     }
     
     return self;
+}
+
+- (id)initWithRequests:(NSArray *)requests completeBlock:(BatchRequestCompleteBlock)completeBlock
+{
+    return [self initWithRequests:requests completeCondition:BatchRequestCompleteCondiction_AllRequested completeBlock:completeBlock];
 }
 
 

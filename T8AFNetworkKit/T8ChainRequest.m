@@ -16,9 +16,12 @@
 
 @property (nonatomic, strong) NSMutableArray *requests;
 @property (nonatomic, assign) NSUInteger currentRequestIndex;
+@property (nonatomic, assign) ChainRequestCompleteCondiction completeCondition;
 @property (nonatomic, copy) ChainRequestCompleteBlock completeBlock;
 
 @property (nonatomic, assign, readwrite) NSUInteger completeCount;
+@property (nonatomic, assign, readwrite) NSUInteger succeedCount;
+@property (nonatomic, assign, readwrite) NSUInteger failedCount;
 
 @property (nonatomic, assign, readwrite) T8RequestState state;
 
@@ -45,8 +48,11 @@
     self = [super init];
     if (self) {
         _requests = [[NSMutableArray alloc] init];
+        _completeCondition = ChainRequestCompleteCondiction_AnyFailed;
         _currentRequestIndex = 0;
         _completeCount = 0;
+        _succeedCount = 0;
+        _failedCount = 0;
         _completeBlock = nil;
         _shouldComplete = YES;
         
@@ -56,11 +62,12 @@
     return self;
 }
 
-- (id)initWithRequests:(NSArray *)requests completeBlock:(ChainRequestCompleteBlock)completeBlock shouldComplete:(BOOL)shouldComplete
+- (id)initWithRequests:(NSArray *)requests completeCondition:(ChainRequestCompleteCondiction)completeCondition completeBlock:(ChainRequestCompleteBlock)completeBlock shouldComplete:(BOOL)shouldComplete
 {
     self = [self init];
     if (self) {
         [_requests addObjectsFromArray:requests];
+        _completeCondition = completeCondition;
         _completeBlock = [completeBlock copy];
         _shouldComplete = shouldComplete;
         
@@ -68,6 +75,11 @@
     }
     
     return self;
+}
+
+- (id)initWithRequests:(NSArray *)requests completeBlock:(ChainRequestCompleteBlock)completeBlock shouldComplete:(BOOL)shouldComplete
+{
+    return [self initWithRequests:requests completeCondition:ChainRequestCompleteCondiction_AnyFailed completeBlock:completeBlock shouldComplete:shouldComplete];
 }
 
 
@@ -137,7 +149,7 @@
         self.state = T8RequestState_CompletedSucceed;
         
         if (self.completeBlock) {
-            self.completeBlock(self.completeCount);
+            self.completeBlock(self.completeCount, self.succeedCount, self.failedCount);
         }
         
         if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
@@ -173,14 +185,15 @@
 {
     request.completeDelegate = nil;
     
+    self.completeCount++;
     if (request.state == T8RequestState_CompletedSucceed) {
-        self.completeCount++;
+        self.succeedCount++;
         
         if (self.completeCount >= self.requests.count && self.shouldComplete) {
             self.state = T8RequestState_CompletedSucceed;
             
             if (self.completeBlock) {
-                self.completeBlock(self.completeCount);
+                self.completeBlock(self.completeCount, self.succeedCount, self.failedCount);
             }
             
             if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
@@ -192,16 +205,36 @@
             [self startNextRequest];
         }
     } else {
-        self.state = T8RequestState_CompletedFailed;
+        self.failedCount++;
         
-        [self cancel];
-        
-        if (self.completeBlock) {
-            self.completeBlock(self.completeCount);
-        }
-        
-        if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
-            [self.completeDelegate requestCompleted:self];
+        if (self.completeCondition == BatchRequestCompleteCondiction_AnyFailed) {
+            self.state = T8RequestState_CompletedFailed;
+            
+            [self cancel];
+            
+            if (self.completeBlock) {
+                self.completeBlock(self.completeCount, self.succeedCount, self.failedCount);
+            }
+            
+            if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
+                [self.completeDelegate requestCompleted:self];
+            }
+        } else if (self.completeCondition == BatchRequestCompleteCondiction_AllRequested) {
+            if (self.completeCount >= self.requests.count && self.shouldComplete) {
+                self.state = T8RequestState_CompletedSucceed;
+                
+                if (self.completeBlock) {
+                    self.completeBlock(self.completeCount, self.succeedCount, self.failedCount);
+                }
+                
+                if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
+                    [self.completeDelegate requestCompleted:self];
+                }
+            } else {
+                self.currentRequestIndex++;
+                
+                [self startNextRequest];
+            }
         }
     }
 }
