@@ -29,6 +29,7 @@ typedef void(^RequestComplete)(RequestStatus status, NSDictionary *data, T8Netwo
 typedef void(^RequestHandleBlock)(NSMutableURLRequest *request);
 typedef void(^RequestProgressBlock)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef void(^RequestErrorHandleBlock)(NSDictionary *data);
+typedef void(^RequestFailureBlock)(NSString *path, NSError *error);
 
 @interface T8BaseNetworkService : NSObject
 
@@ -37,6 +38,8 @@ typedef void(^RequestErrorHandleBlock)(NSDictionary *data);
 + (void)setHandleBlock:(RequestHandleBlock)handleBlock;
 
 + (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock;
+
++ (void)setFailureBlock:(RequestFailureBlock)failureBlock;
 
 + (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
 
