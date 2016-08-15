@@ -12,6 +12,7 @@
 #import "T8BaseRequest.h"
 #import "T8BatchRequest.h"
 #import "T8ChainRequest.h"
+#import "T8UploadFileRequest.h"
 
 
 @interface ViewController ()
@@ -72,7 +73,21 @@
             NSLog(@"request1 completed");
         });
     }];
-    [chainRequest addRequest:request2 shouldComplete:YES];
+    [chainRequest addRequest:request2 shouldComplete:NO];
+
+    
+    NSMutableArray *fileInfos = [[NSMutableArray alloc] init];
+    UIImage *image = [UIImage imageNamed:@"0578"];
+    NSData *imageData = UIImageJPEGRepresentation(image, 0.8);
+    [fileInfos addObject:@{@"type": @"data", @"data": imageData, @"filename": @"images", @"mimetype": @"image/jpg"}];
+    
+    T8UploadFileRequest *uploadRequest = [[T8UploadFileRequest alloc] initWithFileInfos:fileInfos path:@"v3/upload/picture" params:nil progressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        
+    } completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+        
+    }];
+    
+    [chainRequest addRequest:uploadRequest shouldComplete:YES];
 }
 
 - (void)didReceiveMemoryWarning {

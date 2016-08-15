@@ -117,11 +117,11 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     }
 }
 
-+ (AFHTTPRequestOperation *)uploadFilesRequestWithFileInfos:(NSArray *)fileInfos urlPath:(NSString *)strUrlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
++ (AFHTTPRequestOperation *)uploadFilesRequestWithFileInfos:(NSArray *)fileInfos urlPath:(NSString *)urlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
 {
     AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
     
-    NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+    NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:urlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         for (int i = 0; i<fileInfos.count; i++) {
             NSDictionary *fileDict = fileInfos[i];
             NSString *type = [fileDict objectForKey:@"type"];
@@ -153,6 +153,8 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     if (progressBlock) {
         [operation setUploadProgressBlock:progressBlock];
     }
+    
+    [manager.operationQueue addOperation:operation];
     
     return operation;
 }
