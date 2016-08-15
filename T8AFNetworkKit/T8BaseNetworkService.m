@@ -11,6 +11,7 @@
 static NSString *T8BaseNetworkUrl = nil;
 static RequestHandleBlock T8RequestHandleBlock = nil;
 static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
+static RequestFailureBlock T8RequestFailureBlock = nil;
 
 @implementation T8BaseNetworkService
 
@@ -43,6 +44,11 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
 + (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock
 {
     T8RequestErrorHandleBlock = errorHandleBlock;
+}
+
++ (void)setFailureBlock:(RequestFailureBlock)failureBlock
+{
+    T8RequestFailureBlock = failureBlock;
 }
 
 + (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
@@ -425,6 +431,10 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
     if (completeBlock != nil) {
         T8NetworkError *e = [T8NetworkError errorWithNSError:error];
         completeBlock(RequestStatusFailure, nil, e);
+    }
+    
+    if (T8RequestFailureBlock) {
+        T8RequestFailureBlock([operation.request.URL.absoluteString stringByReplacingOccurrencesOfString:T8BaseNetworkUrl withString:@""], error);
     }
 }
 
