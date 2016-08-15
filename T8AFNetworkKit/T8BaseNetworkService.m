@@ -111,6 +111,47 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
     }
 }
 
++ (AFHTTPRequestOperation *)uploadFilesRequestWithFileInfos:(NSArray *)fileInfos urlPath:(NSString *)strUrlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
+{
+    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    
+    NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        for (int i = 0; i<fileInfos.count; i++) {
+            NSDictionary *fileDict = fileInfos[i];
+            NSString *type = [fileDict objectForKey:@"type"];
+            NSString *filename = [fileDict objectForKey:@"filename"]?[fileDict objectForKey:@"filename"]:@"";
+            NSString *mimetype = [fileDict objectForKey:@"mimetype"]?[fileDict objectForKey:@"mimetype"]:@"";
+            if ([type isEqualToString:@"data"]) {
+                NSData *data = [fileDict objectForKey:@"data"];
+                if (data) {
+                    [formData appendPartWithFileData:data name:filename fileName:filename mimeType:mimetype];
+                }
+            }else if ([type isEqualToString:@"path"]){
+                NSString *path = [fileDict objectForKey:@"path"];
+                if (path.length > 0) {
+                    [formData appendPartWithFileURL:[NSURL URLWithString:path] name:filename fileName:filename mimeType:mimetype error:nil];
+                }
+            }
+        }
+    } error:nil];
+    if (T8RequestHandleBlock) {
+        T8RequestHandleBlock(request);
+    }
+    
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self handleSuccesss:operation response:responseObject block:completBlock];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self handleFail:operation error:error block:completBlock];
+    }];
+    
+    if (progressBlock) {
+        [operation setUploadProgressBlock:progressBlock];
+    }
+    
+    return operation;
+}
+
+
 + (void)sendSyncRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
 {
     NSString *method;
