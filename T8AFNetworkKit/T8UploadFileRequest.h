@@ -17,14 +17,14 @@
 
 
 //  需要上传的文件信息
-@property (nonatomic, copy, readonly) NSArray *fileInfos;
+@property (nonatomic, copy) NSArray *fileInfos;
 //  请求路径
-@property (nonatomic, copy, readonly) NSString *path;
+@property (nonatomic, copy) NSString *path;
 //  请求参数，默认为nil
-@property (nonatomic, strong, readonly) NSDictionary *params;
+@property (nonatomic, strong) NSDictionary *params;
 //  上传进度Blocks
-@property (nonatomic, copy, readonly) RequestProgressBlock progressBlock;
+@property (nonatomic, copy) RequestProgressBlock progressBlock;
 //  请求完成的回调block，默认为nil
-@property (nonatomic, copy, readonly) RequestComplete completeBlock;
+@property (nonatomic, copy) RequestComplete completeBlock;
 
 @end

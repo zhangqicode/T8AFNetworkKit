@@ -29,16 +29,16 @@
 
 
 //  请求路径
-@property (nonatomic, strong, readonly) NSString *path;
+@property (nonatomic, strong) NSString *path;
 //  http请求方法，默认为HttpMethodGet
-@property (nonatomic, assign, readonly) HttpMethod httpMethod;
+@property (nonatomic, assign) HttpMethod httpMethod;
 //  请求参数，默认为nil
-@property (nonatomic, strong, readonly) NSDictionary *params;
+@property (nonatomic, strong) NSDictionary *params;
 
 //  请求失败后是否适用cache，默认为NO
-@property (nonatomic, assign, readonly) BOOL useCacheWhenFailed;
+@property (nonatomic, assign) BOOL useCacheWhenFailed;
 
 //  请求完成的回调block，默认为nil
-@property (nonatomic, copy, readonly) RequestComplete completeBlock;
+@property (nonatomic, copy) RequestComplete completeBlock;
 
 @end

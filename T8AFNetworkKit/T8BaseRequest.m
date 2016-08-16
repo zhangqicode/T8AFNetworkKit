@@ -17,12 +17,6 @@
 //  该请求对应的AFHTTPRequestOperation
 @property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
-@property (nonatomic, strong, readwrite) NSString *path;
-@property (nonatomic, assign, readwrite) HttpMethod httpMethod;
-@property (nonatomic, strong, readwrite) NSDictionary *params;
-@property (nonatomic, assign, readwrite) BOOL useCacheWhenFailed;
-@property (nonatomic, copy, readwrite) RequestComplete completeBlock;
-
 @property (nonatomic, assign, readwrite) T8RequestState state;
 
 @end

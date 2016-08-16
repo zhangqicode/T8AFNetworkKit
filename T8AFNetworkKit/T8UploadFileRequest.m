@@ -16,12 +16,6 @@
 //  该请求对应的AFHTTPRequestOperation
 @property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
-@property (nonatomic, copy, readwrite) NSArray *fileInfos;
-@property (nonatomic, copy, readwrite) NSString *path;
-@property (nonatomic, strong, readwrite) NSDictionary *params;
-@property (nonatomic, copy, readwrite) RequestProgressBlock progressBlock;
-@property (nonatomic, copy, readwrite) RequestComplete completeBlock;
-
 @property (nonatomic, assign, readwrite) T8RequestState state;
 
 @end

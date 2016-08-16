@@ -125,8 +125,19 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         for (int i = 0; i<fileInfos.count; i++) {
             NSDictionary *fileDict = fileInfos[i];
             NSString *type = [fileDict objectForKey:@"type"];
-            NSString *filename = [fileDict objectForKey:@"filename"]?[fileDict objectForKey:@"filename"]:@"";
-            NSString *mimetype = [fileDict objectForKey:@"mimetype"]?[fileDict objectForKey:@"mimetype"]:@"";
+            
+            NSString *filename = @(i).stringValue;
+            NSString *tmpFilename = [fileDict objectForKey:@"filename"];
+            if (tmpFilename) {
+                filename = [NSString stringWithFormat:@"%@%i", tmpFilename, i];
+            }
+            
+            NSString *tmpMimeType = [fileDict objectForKey:@"mimetype"];
+            NSString *mimetype = @"";
+            if (tmpMimeType) {
+                mimetype = tmpMimeType;
+            }
+            
             if ([type isEqualToString:@"data"]) {
                 NSData *data = [fileDict objectForKey:@"data"];
                 if (data) {
