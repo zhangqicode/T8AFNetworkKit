@@ -60,9 +60,14 @@
     if (self) {
         _path = path;
         _httpMethod = httpMethod;
-        _params = [params copy];
+        
+        if (params) {
+            _params = [params copy];
+        }
         _useCacheWhenFailed = useCacheWhenFailed;
-        _completeBlock = [completeBlock copy];
+        if (completeBlock) {
+            _completeBlock = [completeBlock copy];
+        }
         
         self.state = T8RequestState_Ready;
     }

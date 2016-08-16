@@ -53,11 +53,23 @@
 {
     self = [self init];
     if (self) {
-        _fileInfos = [fileInfos copy];
+        if (fileInfos) {
+            _fileInfos = [fileInfos copy];
+        }
+        
         _path = path;
-        _params = [params copy];
-        _progressBlock = [progressBlock copy];
-        _completeBlock = [completeBlock copy];
+        
+        if (params) {
+            _params = [params copy];
+        }
+        
+        if (progressBlock) {
+            _progressBlock = [progressBlock copy];
+        }
+        
+        if (completeBlock) {
+            _completeBlock = [completeBlock copy];
+        }
         
         self.state = T8RequestState_Ready;
     }
