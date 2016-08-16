@@ -53,6 +53,7 @@
 {
     self = [self init];
     if (self) {
+        _fileInfos = [fileInfos copy];
         _path = path;
         _params = [params copy];
         _progressBlock = [progressBlock copy];
