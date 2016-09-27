@@ -15,12 +15,12 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
 
 @implementation T8BaseNetworkService
 
-+ (AFHTTPRequestOperationManager *)shareInstance
++ (AFHTTPSessionManager *)shareInstance
 {
-    static AFHTTPRequestOperationManager *shareInstance = nil;
+    static AFHTTPSessionManager *shareInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shareInstance = [AFHTTPRequestOperationManager manager];
+        shareInstance = [AFHTTPSessionManager manager];
         shareInstance.completionQueue = dispatch_queue_create("com.tinfinite.network.completionqueue", DISPATCH_QUEUE_CONCURRENT);
         shareInstance.responseSerializer = [AFJSONResponseSerializer serializer];
         shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
@@ -51,12 +51,12 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     T8RequestFailureBlock = failureBlock;
 }
 
-+ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
++ (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
 {
     return [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:completeBlock cachePolicy:-1];
 }
 
-+ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock cachePolicy:(NSURLRequestCachePolicy)policy
++ (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock cachePolicy:(NSURLRequestCachePolicy)policy
 {
     NSString *method;
     switch (httpMethod) {
@@ -82,27 +82,39 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
             break;
     }
     
-    AFHTTPRequestOperationManager *op = [self shareInstance];
-    NSMutableURLRequest *request = [op.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:nil];
+    AFHTTPSessionManager *sessionManager = [self shareInstance];
+    NSError *serializationError = nil;
+    NSMutableURLRequest *request = [sessionManager.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:&serializationError];
     request.cachePolicy = policy;
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
-    AFHTTPRequestOperation *operation = [op HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation __unused *operation, id responseObject)
-                                         {
-                                             [self handleSuccesss:operation response:responseObject block:completeBlock];
-                                             
-                                         } failure:^(AFHTTPRequestOperation __unused *operation, NSError *error) {
-                                             [self handleFail:operation error:error block:completeBlock];
-                                             
-                                         }];
     
-    [op.operationQueue addOperation:operation];
+    if (serializationError) {
+            dispatch_async(sessionManager.completionQueue ?: dispatch_get_main_queue(), ^{
+                [self handleFail:nil error:serializationError block:completeBlock];
+            });
+
+        return nil;
+    }
     
-    return operation;
+    __block NSURLSessionDataTask *task = nil;
+    task = [sessionManager dataTaskWithRequest:request
+                                                uploadProgress:nil
+                                            downloadProgress:nil
+                                            completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (error) {
+            [self handleFail:response error:error block:completeBlock];
+        }
+        else {
+            [self handleSuccesss:response response:responseObject block:completeBlock];
+        }
+    }];
+    [task resume];
+    return task;
 }
 
-+ (AFHTTPRequestOperation *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache
++ (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache
 {
     if (cache) {
         return [self sendRequestUrlPath:strUrlPath httpMethod:httpMethod dictParams:dictParams completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
@@ -117,9 +129,9 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     }
 }
 
-+ (AFHTTPRequestOperation *)uploadFilesRequestWithFileInfos:(NSArray *)fileInfos urlPath:(NSString *)urlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
++ (NSURLSessionDataTask *)uploadFilesRequestWithFileInfos:(NSArray *)fileInfos urlPath:(NSString *)urlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completeBlock
 {
-    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    AFHTTPSessionManager *manager = [T8BaseNetworkService shareInstance];
     
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:urlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         for (int i = 0; i<fileInfos.count; i++) {
@@ -155,67 +167,66 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         T8RequestHandleBlock(request);
     }
     
-    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [self handleSuccesss:operation response:responseObject block:completBlock];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self handleFail:operation error:error block:completBlock];
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [manager dataTaskWithRequest:request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (error) {
+            [self handleFail:response error:error block:completeBlock];
+        }
+        else {
+            [self handleSuccesss:response response:responseObject block:completeBlock];
+        }
     }];
     
-    if (progressBlock) {
-        [operation setUploadProgressBlock:progressBlock];
-    }
-    
-    [manager.operationQueue addOperation:operation];
-    
-    return operation;
+    [dataTask resume];
+    return dataTask;
 }
 
 
-+ (void)sendSyncRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
-{
-    NSString *method;
-    switch (httpMethod) {
-        case HttpMethodGet:
-            method = @"GET";
-            break;
-        case HttpMethodPost:
-            method = @"POST";
-            break;
-        case HttpMethodPut:
-            method = @"PUT";
-            break;
-        case HttpMethodDelete:
-            method = @"DELETE";
-            break;
-        case HttpMethodPatch:
-            method = @"PATCH";
-            break;
-        case HttpMethodHead:
-            method = @"HEAD";
-            break;
-        default:
-            break;
-    }
-    
-    AFHTTPRequestOperationManager *op = [self shareInstance];
-    NSMutableURLRequest *request = [op.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:nil];
-    if (T8RequestHandleBlock) {
-        T8RequestHandleBlock(request);
-    }
-    
-    NSError *error = nil;
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-    if (error) {
-        [self handleFail:nil error:error block:completeBlock];
-    }else{
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error) {
-            [self handleFail:nil error:error block:completeBlock];
-        }else{
-            [self handleSuccesss:nil response:dict block:completeBlock];
-        }
-    }
-}
+//+ (void)sendSyncRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
+//{
+//    NSString *method;
+//    switch (httpMethod) {
+//        case HttpMethodGet:
+//            method = @"GET";
+//            break;
+//        case HttpMethodPost:
+//            method = @"POST";
+//            break;
+//        case HttpMethodPut:
+//            method = @"PUT";
+//            break;
+//        case HttpMethodDelete:
+//            method = @"DELETE";
+//            break;
+//        case HttpMethodPatch:
+//            method = @"PATCH";
+//            break;
+//        case HttpMethodHead:
+//            method = @"HEAD";
+//            break;
+//        default:
+//            break;
+//    }
+//    
+//    AFHTTPRequestOperationManager *op = [self shareInstance];
+//    NSMutableURLRequest *request = [op.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:nil];
+//    if (T8RequestHandleBlock) {
+//        T8RequestHandleBlock(request);
+//    }
+//    
+//    NSError *error = nil;
+//    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+//    if (error) {
+//        [self handleFail:nil error:error block:completeBlock];
+//    }else{
+//        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+//        if (error) {
+//            [self handleFail:nil error:error block:completeBlock];
+//        }else{
+//            [self handleSuccesss:nil response:dict block:completeBlock];
+//        }
+//    }
+//}
 
 + (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename completBlock:(RequestComplete)completBlock;
 {
@@ -227,9 +238,9 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     [self uploadImage:imageData urlPath:strUrlPath filename:filename params:nil progressBlock:progressBlock completBlock:completBlock];
 }
 
-+ (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
++ (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completeBlock
 {
-    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    AFHTTPSessionManager *manager = [T8BaseNetworkService shareInstance];
     
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileData:imageData name:filename fileName:filename mimeType:@"image/jpg"];
@@ -238,22 +249,22 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         T8RequestHandleBlock(request);
     }
     
-    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [self handleSuccesss:operation response:responseObject block:completBlock];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self handleFail:operation error:error block:completBlock];
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [manager dataTaskWithRequest:request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (error) {
+            [self handleFail:response error:error block:completeBlock];
+        }
+        else {
+            [self handleSuccesss:response response:responseObject block:completeBlock];
+        }
     }];
+    [dataTask resume];
     
-    [manager.operationQueue addOperation:option];
-    
-    if (progressBlock) {
-        [option setUploadProgressBlock:progressBlock];
-    }
 }
 
-+ (void)uploadImageDataArray:(NSArray *)imageDataArray urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
++ (void)uploadImageDataArray:(NSArray *)imageDataArray urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completeBlock
 {
-    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    AFHTTPSessionManager *manager = [T8BaseNetworkService shareInstance];
     
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         for (int i = 0; i<imageDataArray.count; i++) {
@@ -266,17 +277,16 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         T8RequestHandleBlock(request);
     }
     
-    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [self handleSuccesss:operation response:responseObject block:completBlock];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self handleFail:operation error:error block:completBlock];
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [manager dataTaskWithRequest:request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (error) {
+            [self handleFail:response error:error block:completeBlock];
+        }
+        else {
+            [self handleSuccesss:response response:responseObject block:completeBlock];
+        }
     }];
-    
-    [manager.operationQueue addOperation:option];
-    
-    if (progressBlock) {
-        [option setUploadProgressBlock:progressBlock];
-    }
+    [dataTask resume];
 }
 
 + (void)uploadVideo:(NSURL *)videoUrl urlPath:(NSString *)strUrlPath filename:(NSString *)filename params:(NSMutableDictionary *)mutDict completeBlock:(RequestComplete)completeBlock
@@ -286,7 +296,7 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
 
 + (void)uploadVideo:(NSURL *)videoUrl urlPath:(NSString *)strUrlPath filename:(NSString *)filename progressBlock:(RequestProgressBlock)progressBlock params:(NSMutableDictionary *)mutDict completeBlock:(RequestComplete)completeBlock
 {
-    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    AFHTTPSessionManager *manager = [T8BaseNetworkService shareInstance];
     
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:mutDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileURL:videoUrl name:filename error:nil];
@@ -295,17 +305,17 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         T8RequestHandleBlock(request);
     }
     
-    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [self handleSuccesss:operation response:responseObject block:completeBlock];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self handleFail:operation error:error block:completeBlock];
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [manager dataTaskWithRequest:request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (error) {
+            [self handleFail:response error:error block:completeBlock];
+        }
+        else {
+            [self handleSuccesss:response response:responseObject block:completeBlock];
+        }
     }];
-    
-    [manager.operationQueue addOperation:option];
-    
-    if (progressBlock) {
-        [option setUploadProgressBlock:progressBlock];
-    }
+    [dataTask resume];
+
 }
 
 + (void)uploadVideoWithParams:(NSMutableDictionary *)params mediaUrl:(NSURL *)mediaUrl path:(NSString *)path uploadCompletion:(void (^)(NSURLResponse *, id, NSError *))completionBlock progressBlock:(void (^)(NSURLSessionUploadTask *))progressBlock
@@ -347,9 +357,9 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
  *  @param progressBlock
  *  @param completBlock
  */
-+ (void)uploadFiles:(NSArray *)files urlPath:(NSString *)strUrlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completBlock
++ (void)uploadFiles:(NSArray *)files urlPath:(NSString *)strUrlPath params:(NSMutableDictionary *)params progressBlock:(RequestProgressBlock)progressBlock completBlock:(RequestComplete)completeBlock
 {
-    AFHTTPRequestOperationManager *manager = [T8BaseNetworkService shareInstance];
+    AFHTTPSessionManager *manager = [T8BaseNetworkService shareInstance];
     
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         for (int i = 0; i<files.count; i++) {
@@ -374,17 +384,17 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         T8RequestHandleBlock(request);
     }
     
-    AFHTTPRequestOperation *option = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [self handleSuccesss:operation response:responseObject block:completBlock];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self handleFail:operation error:error block:completBlock];
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [manager dataTaskWithRequest:request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        if (error) {
+            [self handleFail:response error:error block:completeBlock];
+        }
+        else {
+            [self handleSuccesss:response response:responseObject block:completeBlock];
+        }
     }];
-    
-    [manager.operationQueue addOperation:option];
-    
-    if (progressBlock) {
-        [option setUploadProgressBlock:progressBlock];
-    }
+    [dataTask resume];
+
 }
 
 + (NSString *)getRequestUrl:(NSString *)path
@@ -400,10 +410,10 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     }
 }
 
-+ (void)handleSuccesss:(AFHTTPRequestOperation *)operation response:(id)responseObject block:(RequestComplete)completeBlock
++ (void)handleSuccesss:(NSURLResponse *)response response:(id)responseObject block:(RequestComplete)completeBlock
 {
 #ifndef __OPTIMIZE__
-    NSLog(@"\n请求接口：%@\n请求的结果：%@\n", operation.request.URL.absoluteString, responseObject);
+    NSLog(@"\n请求接口：%@\n请求的结果：%@\n", response.URL.absoluteString, responseObject);
 #endif
     NSDictionary *json = responseObject;
     
@@ -420,7 +430,7 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
                 T8RequestErrorHandleBlock(json);
             }
 #ifndef __OPTIMIZE__
-            NSLog(@"\n请求接口：%@\n错误信息：%@", operation.request.URL.absoluteString, errorMsg);
+            NSLog(@"\n请求接口：%@\n错误信息：%@", response.URL.absoluteString, errorMsg);
 #endif
         }else{
             // 接口调用成功
@@ -429,14 +439,14 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     }else{
         // 接口数据为空
 #ifndef __OPTIMIZE__
-        NSLog(@"\n请求接口：%@\n接口数据异常", operation.request.URL.absoluteString);
+        NSLog(@"\n请求接口：%@\n接口数据异常", response.URL.absoluteString);
 #endif
         T8NetworkError *e = [T8NetworkError errorWithCode:-1 errorMessage:@"数据异常"];
         completeBlock(RequestStatusFailure, @{}, e);
     }
 }
 
-+ (void)handleFail:(AFHTTPRequestOperation *)operation error:(NSError *)error block:(RequestComplete)completeBlock
++ (void)handleFail:(NSURLResponse *)response error:(NSError *)error block:(RequestComplete)completeBlock
 {
 #ifndef __OPTIMIZE__
     NSLog(@"\n网络错误，请求的错误提示：%@\n", error);
@@ -447,7 +457,7 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     }
     
     if (T8RequestFailureBlock) {
-        T8RequestFailureBlock([operation.request.URL.absoluteString stringByReplacingOccurrencesOfString:T8BaseNetworkUrl withString:@""], error);
+        T8RequestFailureBlock([response.URL.absoluteString stringByReplacingOccurrencesOfString:T8BaseNetworkUrl withString:@""], error);
     }
 }
 

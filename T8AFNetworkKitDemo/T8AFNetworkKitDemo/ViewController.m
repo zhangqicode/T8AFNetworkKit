@@ -35,7 +35,7 @@
     
     T8ChainRequest *chainRequest = [[T8ChainRequest alloc] initWithRequests:@[] completeCondition:ChainRequestCompleteCondiction_AllRequested completeBlock:^(NSUInteger completeCount, NSUInteger succeedCount, NSUInteger failedCount) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"🎉🎉🎉🎉🎉🎉🎉🎉🎉chain request completed. completeCount:%d succeedCount:%d failedCount:%d", completeCount, succeedCount, failedCount);
+            NSLog(@"🎉🎉🎉🎉🎉🎉🎉🎉🎉chain request completed. completeCount:%ld succeedCount:%ld failedCount:%ld", completeCount, succeedCount, failedCount);
         });
     } shouldComplete:NO];
     

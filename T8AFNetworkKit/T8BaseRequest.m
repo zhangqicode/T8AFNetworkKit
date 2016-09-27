@@ -14,8 +14,9 @@
     id<T8RequestCompleteDelegate> _completeDelegate;
 }
 
-//  该请求对应的AFHTTPRequestOperation
-@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
+//  该请求对应的AFHTTPRequestOperation AF3 之后移除该类，替换为NSURLSessionDataTask
+//@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
+@property (nonatomic, strong) NSURLSessionDataTask *dataTask;
 
 @property (nonatomic, assign, readwrite) T8RequestState state;
 
@@ -26,12 +27,13 @@
 
 - (void)dealloc
 {
-    if (_requestOperation) {
-        [_requestOperation cancel];
-        _requestOperation = nil;
+    if (_dataTask) {
+        [_dataTask cancel];
+        _dataTask = nil;
     }
     
     _completeBlock = nil;
+
 }
 
 #pragma mark - 
@@ -92,22 +94,22 @@
     
     self.state = T8RequestState_Loading;
     
-    self.requestOperation = [T8BaseNetworkService sendRequestUrlPath:self.path httpMethod:self.httpMethod dictParams:[self.params mutableCopy] completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+    self.dataTask = [T8BaseNetworkService sendRequestUrlPath:self.path httpMethod:self.httpMethod dictParams:[self.params mutableCopy] completeBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
         if (self.completeBlock) {
             self.completeBlock(status, data, error);
         }
-        
+
         if (status == RequestStatusSuccess) {
             self.state = T8RequestState_CompletedSucceed;
         } else {
             self.state = T8RequestState_CompletedFailed;
         }
-        
+
         if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
             [self.completeDelegate requestCompleted:self];
         }
-        
     } useCacheWhenFail:self.useCacheWhenFailed];
+    
 }
 
 - (void)cancel
@@ -117,10 +119,10 @@
     }
     self.state = T8RequestState_CompletedFailed;
     
-    if (self.requestOperation && !self.requestOperation.isCancelled) {
-        [self.requestOperation cancel];
+    if (self.dataTask) {
+        [self.dataTask cancel];
     }
-    
+
     if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
         [self.completeDelegate requestCompleted:self];
     }
