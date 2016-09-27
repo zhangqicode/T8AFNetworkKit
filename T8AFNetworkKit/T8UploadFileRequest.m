@@ -14,7 +14,8 @@
 }
 
 //  该请求对应的AFHTTPRequestOperation
-@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
+//@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
+@property (nonatomic, strong) NSURLSessionDataTask *dataTask;
 
 @property (nonatomic, assign, readwrite) T8RequestState state;
 
@@ -25,9 +26,9 @@
 
 - (void)dealloc
 {
-    if (_requestOperation) {
-        [_requestOperation cancel];
-        _requestOperation = nil;
+    if (_dataTask) {
+        [_dataTask cancel];
+        _dataTask = nil;
     }
     
     _completeBlock = nil;
@@ -88,17 +89,17 @@
     
     self.state = T8RequestState_Loading;
     
-    self.requestOperation = [T8BaseNetworkService uploadFilesRequestWithFileInfos:self.fileInfos urlPath:self.path params:[self.params mutableCopy] progressBlock:self.progressBlock completBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
+    self.dataTask = [T8BaseNetworkService uploadFilesRequestWithFileInfos:self.fileInfos urlPath:self.path params:[self.params mutableCopy] progressBlock:self.progressBlock completBlock:^(RequestStatus status, NSDictionary *data, T8NetworkError *error) {
         if (self.completeBlock) {
             self.completeBlock(status, data, error);
         }
-        
+
         if (status == RequestStatusSuccess) {
             self.state = T8RequestState_CompletedSucceed;
         } else {
             self.state = T8RequestState_CompletedFailed;
         }
-        
+
         if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
             [self.completeDelegate requestCompleted:self];
         }
@@ -112,8 +113,12 @@
     }
     self.state = T8RequestState_CompletedFailed;
     
-    if (self.requestOperation && !self.requestOperation.isCancelled) {
-        [self.requestOperation cancel];
+//    if (self.requestOperation && !self.requestOperation.isCancelled) {
+//        [self.requestOperation cancel];
+//    }
+    
+    if (self.dataTask) {
+        [self.dataTask cancel];
     }
     
     if ([self.completeDelegate respondsToSelector:@selector(requestCompleted:)]) {
