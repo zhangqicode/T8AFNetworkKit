@@ -51,6 +51,7 @@
         _completeCount = 0;
         _succeedCount = 0;
         _failedCount = 0;
+        _requestInterval = 0.05f;
         
         self.state = T8RequestState_Unkown;
     }
@@ -100,7 +101,7 @@
         request.completeDelegate = self;
         [request start];
         
-        [NSThread sleepForTimeInterval:0.05f];
+        [NSThread sleepForTimeInterval:self.requestInterval];
     }
 }
 
