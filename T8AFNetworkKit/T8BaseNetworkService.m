@@ -141,7 +141,12 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
             NSString *filename = @(i).stringValue;
             NSString *tmpFilename = [fileDict objectForKey:@"filename"];
             if (tmpFilename) {
-                filename = [NSString stringWithFormat:@"%@%i", tmpFilename, i];
+                filename = [NSString stringWithFormat:@"%i_%@", i, tmpFilename];
+            }
+            
+            NSString *name = [fileDict objectForKey:@"name"];
+            if (!name || name.length <= 0) {
+                name = filename;
             }
             
             NSString *tmpMimeType = [fileDict objectForKey:@"mimetype"];
@@ -153,7 +158,7 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
             if ([type isEqualToString:@"data"]) {
                 NSData *data = [fileDict objectForKey:@"data"];
                 if (data) {
-                    [formData appendPartWithFileData:data name:filename fileName:filename mimeType:mimetype];
+                    [formData appendPartWithFileData:data name:name fileName:filename mimeType:mimetype];
                 }
             }else if ([type isEqualToString:@"path"]){
                 NSString *path = [fileDict objectForKey:@"path"];
