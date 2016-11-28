@@ -48,6 +48,8 @@ typedef void(^BatchRequestCompleteBlock)(NSUInteger completeCount, NSUInteger su
  */
 - (id)initWithRequests:(NSArray *)requests completeBlock:(BatchRequestCompleteBlock)completeBlock;
 
+//  每次请求之间的间隔(s)，默认0.05s
+@property (nonatomic, assign) NSTimeInterval requestInterval;
 
 //  完成请求的数量
 @property (nonatomic, assign, readonly) NSUInteger completeCount;
