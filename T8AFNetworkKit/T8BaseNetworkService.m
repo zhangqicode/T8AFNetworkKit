@@ -10,6 +10,7 @@
 
 static NSString *T8BaseNetworkUrl = nil;
 static RequestHandleBlock T8RequestHandleBlock = nil;
+static RequestManagerBlock T8RequestManagerBlock = nil;
 static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
 static RequestFailureBlock T8RequestFailureBlock = nil;
 
@@ -39,6 +40,11 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
 + (void)setHandleBlock:(RequestHandleBlock)handleBlock
 {
     T8RequestHandleBlock = handleBlock;
+}
+
++ (void)setManagerBlock:(RequestManagerBlock)managerBlock
+{
+    T8RequestManagerBlock = managerBlock;
 }
 
 + (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock
@@ -86,6 +92,13 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     NSError *serializationError = nil;
     NSMutableURLRequest *request = [sessionManager.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:&serializationError];
     request.cachePolicy = policy;
+    if (T8RequestManagerBlock) {
+        NSError *err = T8RequestManagerBlock(request);
+        if (err && [err isKindOfClass:[NSError class]]) {
+            [self handleFail:nil error:err block:completeBlock];
+            return nil;
+        }
+    }
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
@@ -163,11 +176,19 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
             }else if ([type isEqualToString:@"path"]){
                 NSString *path = [fileDict objectForKey:@"path"];
                 if (path.length > 0) {
-                    [formData appendPartWithFileURL:[NSURL URLWithString:path] name:filename fileName:filename mimeType:mimetype error:nil];
+                    [formData appendPartWithFileURL:[NSURL URLWithString:path] name:name fileName:filename mimeType:mimetype error:nil];
                 }
             }
         }
     } error:nil];
+    
+    if (T8RequestManagerBlock) {
+        NSError *err = T8RequestManagerBlock(request);
+        if (err && [err isKindOfClass:[NSError class]]) {
+            [self handleFail:nil error:err block:completeBlock];
+            return nil;
+        }
+    }
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
@@ -250,6 +271,13 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileData:imageData name:filename fileName:filename mimeType:@"image/jpg"];
     } error:nil];
+    if (T8RequestManagerBlock) {
+        NSError *err = T8RequestManagerBlock(request);
+        if (err && [err isKindOfClass:[NSError class]]) {
+            [self handleFail:nil error:err block:completeBlock];
+            return;
+        }
+    }
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
@@ -278,6 +306,13 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
             [formData appendPartWithFileData:uploadImageData name:name fileName:name mimeType:@"image/jpg"];
         }
     } error:nil];
+    if (T8RequestManagerBlock) {
+        NSError *err = T8RequestManagerBlock(request);
+        if (err && [err isKindOfClass:[NSError class]]) {
+            [self handleFail:nil error:err block:completeBlock];
+            return;
+        }
+    }
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
@@ -306,6 +341,13 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     NSMutableURLRequest *request = [manager.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:strUrlPath] parameters:mutDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileURL:videoUrl name:filename error:nil];
     } error:nil];
+    if (T8RequestManagerBlock) {
+        NSError *err = T8RequestManagerBlock(request);
+        if (err && [err isKindOfClass:[NSError class]]) {
+            [self handleFail:nil error:err block:completeBlock];
+            return;
+        }
+    }
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
@@ -328,6 +370,13 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:[self getRequestUrl:path] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         [formData appendPartWithFileURL:mediaUrl name:@"filefield" error:nil];
     } error:nil];
+    if (T8RequestManagerBlock) {
+        NSError *err = T8RequestManagerBlock(request);
+        if (err && [err isKindOfClass:[NSError class]]) {
+            completionBlock(nil, nil, err);
+            return;
+        }
+    }
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }
@@ -370,12 +419,16 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         for (int i = 0; i<files.count; i++) {
             NSDictionary *fileDict = files[i];
             NSString *type = [fileDict objectForKey:@"type"];
+            NSString *name = [fileDict objectForKey:@"name"]?[fileDict objectForKey:@"name"]:@"";
             NSString *filename = [fileDict objectForKey:@"filename"]?[fileDict objectForKey:@"filename"]:@"";
+            if (name.length <= 0) {
+                name = [filename copy];
+            }
             NSString *mimetype = [fileDict objectForKey:@"mimetype"]?[fileDict objectForKey:@"mimetype"]:@"";
             if ([type isEqualToString:@"data"]) {
                 NSData *data = [fileDict objectForKey:@"data"];
                 if (data) {
-                    [formData appendPartWithFileData:data name:filename fileName:filename mimeType:mimetype];
+                    [formData appendPartWithFileData:data name:name fileName:filename mimeType:mimetype];
                 }
             }else if ([type isEqualToString:@"path"]){
                 NSString *path = [fileDict objectForKey:@"path"];
@@ -385,6 +438,13 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
             }
         }
     } error:nil];
+    if (T8RequestManagerBlock) {
+        NSError *err = T8RequestManagerBlock(request);
+        if (err && [err isKindOfClass:[NSError class]]) {
+            [self handleFail:nil error:err block:completeBlock];
+            return;
+        }
+    }
     if (T8RequestHandleBlock) {
         T8RequestHandleBlock(request);
     }

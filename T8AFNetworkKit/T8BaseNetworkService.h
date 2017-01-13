@@ -30,6 +30,7 @@ extern NSString const *MimeType_JPG;
 
 typedef void(^RequestComplete)(RequestStatus status, NSDictionary *data, T8NetworkError *error);
 typedef void(^RequestHandleBlock)(NSMutableURLRequest *request);
+typedef NSError*(^RequestManagerBlock)(NSMutableURLRequest *request);
 typedef void(^RequestProgressBlock)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef void(^RequestErrorHandleBlock)(NSDictionary *data);
 typedef void(^RequestFailureBlock)(NSString *path, NSError *error);
@@ -39,6 +40,8 @@ typedef void(^RequestFailureBlock)(NSString *path, NSError *error);
 + (void)setBaseUrl:(NSString *)baseUrl;
 
 + (void)setHandleBlock:(RequestHandleBlock)handleBlock;
+
++ (void)setManagerBlock:(RequestManagerBlock)managerBlock;
 
 + (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock;
 
