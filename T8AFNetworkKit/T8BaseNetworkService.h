@@ -34,6 +34,7 @@ typedef NSError*(^RequestManagerBlock)(NSMutableURLRequest *request);
 typedef void(^RequestProgressBlock)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef void(^RequestErrorHandleBlock)(NSDictionary *data);
 typedef void(^RequestFailureBlock)(NSString *path, NSError *error);
+typedef void(^RequestSuccessHandleBlock)(NSDictionary *data);
 
 @interface T8BaseNetworkService : NSObject
 
@@ -46,6 +47,8 @@ typedef void(^RequestFailureBlock)(NSString *path, NSError *error);
 + (void)setErrorHandleBlock:(RequestErrorHandleBlock)errorHandleBlock;
 
 + (void)setFailureBlock:(RequestFailureBlock)failureBlock;
+
++ (void)setSuccessHandleBlock:(RequestSuccessHandleBlock)successBlock;
 
 + (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
 

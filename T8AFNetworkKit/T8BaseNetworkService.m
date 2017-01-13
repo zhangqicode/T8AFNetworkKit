@@ -13,6 +13,7 @@ static RequestHandleBlock T8RequestHandleBlock = nil;
 static RequestManagerBlock T8RequestManagerBlock = nil;
 static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
 static RequestFailureBlock T8RequestFailureBlock = nil;
+static RequestSuccessHandleBlock T8RequestSuccessBlock = nil;
 
 @implementation T8BaseNetworkService
 
@@ -55,6 +56,11 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
 + (void)setFailureBlock:(RequestFailureBlock)failureBlock
 {
     T8RequestFailureBlock = failureBlock;
+}
+
++ (void)setSuccessHandleBlock:(RequestSuccessHandleBlock)successBlock
+{
+    T8RequestSuccessBlock = successBlock;
 }
 
 + (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
@@ -500,6 +506,9 @@ static RequestFailureBlock T8RequestFailureBlock = nil;
         }else{
             // 接口调用成功
             completeBlock(RequestStatusSuccess, json, nil);
+            if (T8RequestSuccessBlock) {
+                T8RequestSuccessBlock(json);
+            }
         }
     }else{
         // 接口数据为空
