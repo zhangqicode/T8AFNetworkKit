@@ -504,10 +504,20 @@ static RequestSuccessHandleBlock T8RequestSuccessBlock = nil;
             NSLog(@"\n请求接口：%@\n错误信息：%@", response.URL.absoluteString, errorMsg);
 #endif
         }else{
-            // 接口调用成功
-            completeBlock(RequestStatusSuccess, json, nil);
-            if (T8RequestSuccessBlock) {
-                T8RequestSuccessBlock(json);
+            id result = [json objectForKey:@"result"];
+            if (result && ![result isKindOfClass:[NSNull class]]) {
+                // 接口调用成功
+                completeBlock(RequestStatusSuccess, json, nil);
+                if (T8RequestSuccessBlock) {
+                    T8RequestSuccessBlock(json);
+                }
+            } else {
+                // 接口数据为空
+#ifndef __OPTIMIZE__
+                NSLog(@"\n请求接口：%@\n接口数据异常", response.URL.absoluteString);
+#endif
+                T8NetworkError *e = [T8NetworkError errorWithCode:-1 errorMessage:@"数据异常"];
+                completeBlock(RequestStatusFailure, @{}, e);
             }
         }
     }else{

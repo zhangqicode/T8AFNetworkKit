@@ -31,8 +31,8 @@ typedef void(^BatchRequestCompleteBlock)(NSUInteger completeCount, NSUInteger su
  *  初始化方法
  *
  *  @param requests                     请求队列
- *  @param completeCondition    请求队列完成的条件
- *  @param completeBlock            请求队列请求完成的回调Block
+ *  @param completeCondition            请求队列完成的条件
+ *  @param completeBlock                请求队列请求完成的回调Block
  *
  *  @return T8BatchRequest对象
  */
@@ -42,7 +42,7 @@ typedef void(^BatchRequestCompleteBlock)(NSUInteger completeCount, NSUInteger su
  *  初始化方法，请求队列完成条件为BatchRequestCompleteCondiction_AllRequested
  *
  *  @param requests                     请求队列
- *  @param completeBlock            请求队列请求完成的回调Block
+ *  @param completeBlock                请求队列请求完成的回调Block
  *
  *  @return T8BatchRequest对象
  */
