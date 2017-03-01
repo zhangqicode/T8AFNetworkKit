@@ -1,1 +1,3 @@
 # T8AFNetworkKit
+
+T8AFNetworkKit是基于AFNetworking的网络封装库，提供了面向对象的网络请求方式，提高了对请求的控制；同时增加了请求重试功能。
