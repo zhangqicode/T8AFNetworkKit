@@ -30,4 +30,10 @@
  */
 - (NSString*)titleForError;
 
+
+/**
+ * 根据网络请求返回的响应错误code，判断网络请求是否存在致命的错误（fatal error）
+ */
++ (BOOL)isFatalErrorWithErrorCode:(NSInteger)errorCode;
+
 @end

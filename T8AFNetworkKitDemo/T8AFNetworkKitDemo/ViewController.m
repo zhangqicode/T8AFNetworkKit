@@ -9,10 +9,7 @@
 #import "ViewController.h"
 #import "DemoService.h"
 
-#import "T8BaseRequest.h"
-#import "T8BatchRequest.h"
-#import "T8ChainRequest.h"
-#import "T8UploadFileRequest.h"
+#import "T8AFNetworkKit.h"
 
 
 @interface ViewController ()
