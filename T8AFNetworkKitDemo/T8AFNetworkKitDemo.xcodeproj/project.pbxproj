@@ -11,6 +11,7 @@
 		1111ADCE1E66D3A4009FC749 /* T8BatchRequestAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1111ADCA1E66D3A4009FC749 /* T8BatchRequestAgent.m */; };
 		1111ADCF1E66D3A4009FC749 /* T8ChainRequestAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1111ADCB1E66D3A4009FC749 /* T8ChainRequestAgent.m */; };
 		1111ADD01E66D3A4009FC749 /* T8UploadFileRequestAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1111ADCC1E66D3A4009FC749 /* T8UploadFileRequestAgent.m */; };
+		11585AAF1E76A0DE005C0CF8 /* T8RequestAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 11585AAE1E76A0DE005C0CF8 /* T8RequestAgent.m */; };
 		116B0CF41D61EC65007037FE /* T8UploadFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 116B0CF31D61EC65007037FE /* T8UploadFileRequest.m */; };
 		116B0CF61D61F2A4007037FE /* 0578.png in Resources */ = {isa = PBXBuildFile; fileRef = 116B0CF51D61F2A4007037FE /* 0578.png */; };
 		11913FCC1D364685007FDADD /* T8BaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11913FC61D364685007FDADD /* T8BaseRequest.m */; };
@@ -49,6 +50,8 @@
 		1111ADCB1E66D3A4009FC749 /* T8ChainRequestAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8ChainRequestAgent.m; sourceTree = "<group>"; };
 		1111ADCC1E66D3A4009FC749 /* T8UploadFileRequestAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8UploadFileRequestAgent.m; sourceTree = "<group>"; };
 		1111ADD11E66D3CE009FC749 /* T8AFNetworkKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8AFNetworkKit.h; sourceTree = "<group>"; };
+		11585AAD1E76A0DE005C0CF8 /* T8RequestAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8RequestAgent.h; sourceTree = "<group>"; };
+		11585AAE1E76A0DE005C0CF8 /* T8RequestAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8RequestAgent.m; sourceTree = "<group>"; };
 		116B0CF21D61EC65007037FE /* T8UploadFileRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8UploadFileRequest.h; sourceTree = "<group>"; };
 		116B0CF31D61EC65007037FE /* T8UploadFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8UploadFileRequest.m; sourceTree = "<group>"; };
 		116B0CF51D61F2A4007037FE /* 0578.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0578.png; sourceTree = "<group>"; };
@@ -170,6 +173,8 @@
 		6DC395DA1B1BFCF100270D0D /* T8AFNetworkKit */ = {
 			isa = PBXGroup;
 			children = (
+				11585AAD1E76A0DE005C0CF8 /* T8RequestAgent.h */,
+				11585AAE1E76A0DE005C0CF8 /* T8RequestAgent.m */,
 				1111ADD11E66D3CE009FC749 /* T8AFNetworkKit.h */,
 				1111ADC51E66D3A4009FC749 /* T8BaseRequestAgent.h */,
 				1111ADC61E66D3A4009FC749 /* T8BatchRequestAgent.h */,
@@ -376,6 +381,7 @@
 				6DC395DF1B1BFCF100270D0D /* T8BaseNetworkService.m in Sources */,
 				1111ADCD1E66D3A4009FC749 /* T8BaseRequestAgent.m in Sources */,
 				6DB9EF3D1B19B21200355150 /* main.m in Sources */,
+				11585AAF1E76A0DE005C0CF8 /* T8RequestAgent.m in Sources */,
 				6DC395E01B1BFCF100270D0D /* T8NetworkError.m in Sources */,
 				11913FCE1D364685007FDADD /* T8ChainRequest.m in Sources */,
 				1111ADCF1E66D3A4009FC749 /* T8ChainRequestAgent.m in Sources */,
