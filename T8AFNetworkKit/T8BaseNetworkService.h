@@ -50,6 +50,9 @@ typedef void(^RequestSuccessHandleBlock)(NSDictionary *data);
 
 + (void)setSuccessHandleBlock:(RequestSuccessHandleBlock)successBlock;
 
+//  设置哪些请求的result值可以为null
++ (void)setNullableURLS:(NSArray *)nullableURLs;
+
 + (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
 
 + (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock useCacheWhenFail:(BOOL)cache;
