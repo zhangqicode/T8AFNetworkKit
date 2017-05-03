@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "T8RequestAgent.h"
+#import "T8Request.h"
 
 
-@interface T8ChainRequestAgent : T8RequestAgent
+@interface T8ChainRequestAgent : NSObject <T8RequestAgent>
 
 + (T8ChainRequestAgent *)sharedChainRequestAgent;
 

@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "T8RequestAgent.h"
+#import "T8Request.h"
 
 
-@interface T8UploadFileRequestAgent : T8RequestAgent
+@interface T8UploadFileRequestAgent : NSObject <T8RequestAgent>
 
 + (T8UploadFileRequestAgent *)sharedUploadFileRequestAgent;
 

@@ -129,3 +129,22 @@ typedef NS_ENUM(NSInteger, T8RequestState) {
 @property (nonatomic, assign, readonly) T8RequestState state;
 
 @end
+
+
+/**
+ *  请求代理，用于持有某些请求，可以防止请求的提前释放。
+ */
+@protocol T8RequestAgent <NSObject>
+
+@required
+//  请求池
+@property (nonatomic, strong, readonly) NSMutableSet *requests;
+//  添加请求
+- (void)addRequest:(id<T8Request>)request;
+//  移除请求
+- (void)removeRequest:(id<T8Request>)request;
+//  清空所有请求
+- (void)removeAllRequests;
+//  取消所有请求
+- (void)cancelAllRequests;
+@end

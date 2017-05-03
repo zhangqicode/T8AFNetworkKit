@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "T8RequestAgent.h"
+#import "T8Request.h"
 
 
-@interface T8BatchRequestAgent : T8RequestAgent
+@interface T8BatchRequestAgent : NSObject <T8RequestAgent>
 
 + (T8BatchRequestAgent *)sharedBatchRequestAgent;
 

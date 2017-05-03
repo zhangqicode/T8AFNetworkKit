@@ -30,7 +30,7 @@ static NSArray *T8NullableRequestURLs;
         shareInstance = [AFHTTPSessionManager manager];
         shareInstance.completionQueue = dispatch_queue_create("com.tinfinite.network.completionqueue", DISPATCH_QUEUE_CONCURRENT);
         shareInstance.responseSerializer = [AFJSONResponseSerializer serializer];
-        shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", nil];
+        shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
         shareInstance.requestSerializer.timeoutInterval = 10;
         shareInstance.operationQueue.maxConcurrentOperationCount = 10;
     });
