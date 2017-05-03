@@ -8,6 +8,10 @@
 
 #import "T8BaseNetworkService.h"
 
+#ifndef __OPTIMIZE__   //debug
+#define NSLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
+#endif
+
 static NSString *T8BaseNetworkUrl = nil;
 static RequestHandleBlock T8RequestHandleBlock = nil;
 static RequestManagerBlock T8RequestManagerBlock = nil;
@@ -567,7 +571,8 @@ static NSArray *T8NullableRequestURLs;
     }
     
     if (T8RequestFailureBlock) {
-        T8RequestFailureBlock([response.URL.absoluteString stringByReplacingOccurrencesOfString:T8BaseNetworkUrl withString:@""], error);
+        NSString *errorUrl = [error.userInfo objectForKey:@"NSErrorFailingURLStringKey"];
+        T8RequestFailureBlock([errorUrl stringByReplacingOccurrencesOfString:T8BaseNetworkUrl withString:@""], error);
     }
 }
 
