@@ -38,6 +38,8 @@ typedef void(^RequestSuccessHandleBlock)(NSDictionary *data);
 
 @interface T8BaseNetworkService : NSObject
 
++ (AFHTTPSessionManager *)shareInstance;
+
 + (void)setBaseUrl:(NSString *)baseUrl;
 
 + (void)setHandleBlock:(RequestHandleBlock)handleBlock;
