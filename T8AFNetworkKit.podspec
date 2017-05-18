@@ -90,7 +90,7 @@ Pod::Spec.new do |s|
   #
 
   s.source_files  = "T8AFNetworkKit", "T8AFNetworkKit/**/*.{h,m}"
-  #s.exclude_files = "T8AFNetworkKit/**/*.plist"
+  #s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
 
