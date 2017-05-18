@@ -17,6 +17,7 @@
 		11913FCC1D364685007FDADD /* T8BaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11913FC61D364685007FDADD /* T8BaseRequest.m */; };
 		11913FCD1D364685007FDADD /* T8BatchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11913FC81D364685007FDADD /* T8BatchRequest.m */; };
 		11913FCE1D364685007FDADD /* T8ChainRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11913FCA1D364685007FDADD /* T8ChainRequest.m */; };
+		11D22C951ECD7CC300AA0507 /* baseURLOfPaths.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11D22C941ECD7CC300AA0507 /* baseURLOfPaths.plist */; };
 		6DB9EF3D1B19B21200355150 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF3C1B19B21200355150 /* main.m */; };
 		6DB9EF401B19B21200355150 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF3F1B19B21200355150 /* AppDelegate.m */; };
 		6DB9EF431B19B21200355150 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB9EF421B19B21200355150 /* ViewController.m */; };
@@ -62,6 +63,7 @@
 		11913FC91D364685007FDADD /* T8ChainRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8ChainRequest.h; sourceTree = "<group>"; };
 		11913FCA1D364685007FDADD /* T8ChainRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = T8ChainRequest.m; sourceTree = "<group>"; };
 		11913FCB1D364685007FDADD /* T8Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = T8Request.h; sourceTree = "<group>"; };
+		11D22C941ECD7CC300AA0507 /* baseURLOfPaths.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = baseURLOfPaths.plist; sourceTree = "<group>"; };
 		6DB9EF371B19B21200355150 /* T8AFNetworkKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = T8AFNetworkKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB9EF3B1B19B21200355150 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6DB9EF3C1B19B21200355150 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -173,16 +175,17 @@
 		6DC395DA1B1BFCF100270D0D /* T8AFNetworkKit */ = {
 			isa = PBXGroup;
 			children = (
+				1111ADD11E66D3CE009FC749 /* T8AFNetworkKit.h */,
+				11913FCB1D364685007FDADD /* T8Request.h */,
 				11585AAD1E76A0DE005C0CF8 /* T8RequestAgent.h */,
 				11585AAE1E76A0DE005C0CF8 /* T8RequestAgent.m */,
-				1111ADD11E66D3CE009FC749 /* T8AFNetworkKit.h */,
 				1111ADC51E66D3A4009FC749 /* T8BaseRequestAgent.h */,
-				1111ADC61E66D3A4009FC749 /* T8BatchRequestAgent.h */,
-				1111ADC71E66D3A4009FC749 /* T8ChainRequestAgent.h */,
-				1111ADC81E66D3A4009FC749 /* T8UploadFileRequestAgent.h */,
 				1111ADC91E66D3A4009FC749 /* T8BaseRequestAgent.m */,
+				1111ADC61E66D3A4009FC749 /* T8BatchRequestAgent.h */,
 				1111ADCA1E66D3A4009FC749 /* T8BatchRequestAgent.m */,
+				1111ADC71E66D3A4009FC749 /* T8ChainRequestAgent.h */,
 				1111ADCB1E66D3A4009FC749 /* T8ChainRequestAgent.m */,
+				1111ADC81E66D3A4009FC749 /* T8UploadFileRequestAgent.h */,
 				1111ADCC1E66D3A4009FC749 /* T8UploadFileRequestAgent.m */,
 				11913FC51D364685007FDADD /* T8BaseRequest.h */,
 				11913FC61D364685007FDADD /* T8BaseRequest.m */,
@@ -190,13 +193,13 @@
 				11913FC81D364685007FDADD /* T8BatchRequest.m */,
 				11913FC91D364685007FDADD /* T8ChainRequest.h */,
 				11913FCA1D364685007FDADD /* T8ChainRequest.m */,
-				11913FCB1D364685007FDADD /* T8Request.h */,
 				6DC395DB1B1BFCF100270D0D /* T8BaseNetworkService.h */,
 				6DC395DC1B1BFCF100270D0D /* T8BaseNetworkService.m */,
 				6DC395DD1B1BFCF100270D0D /* T8NetworkError.h */,
 				6DC395DE1B1BFCF100270D0D /* T8NetworkError.m */,
 				116B0CF21D61EC65007037FE /* T8UploadFileRequest.h */,
 				116B0CF31D61EC65007037FE /* T8UploadFileRequest.m */,
+				11D22C941ECD7CC300AA0507 /* baseURLOfPaths.plist */,
 			);
 			name = T8AFNetworkKit;
 			path = ../../T8AFNetworkKit;
@@ -304,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DB9EF461B19B21200355150 /* Main.storyboard in Resources */,
+				11D22C951ECD7CC300AA0507 /* baseURLOfPaths.plist in Resources */,
 				6DB9EF4B1B19B21200355150 /* LaunchScreen.xib in Resources */,
 				6DB9EF481B19B21200355150 /* Images.xcassets in Resources */,
 				116B0CF61D61F2A4007037FE /* 0578.png in Resources */,
