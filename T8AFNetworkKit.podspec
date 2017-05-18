@@ -78,7 +78,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/zhangqippp/T8AFNetworkKit.git", :tag => "0.1.1" }
+  s.source       = { :git => "https://github.com/zhangqippp/T8AFNetworkKit.git", :tag => "0.1.10" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -90,7 +90,7 @@ Pod::Spec.new do |s|
   #
 
   s.source_files  = "T8AFNetworkKit", "T8AFNetworkKit/**/*.{h,m}"
-  s.exclude_files = "Classes/Exclude"
+  s.exclude_files = "T8AFNetworkKit/**/*.plist"
 
   # s.public_header_files = "Classes/**/*.h"
 
