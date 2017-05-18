@@ -90,7 +90,7 @@ Pod::Spec.new do |s|
   #
 
   s.source_files  = "T8AFNetworkKit", "T8AFNetworkKit/**/*.{h,m}"
-  s.exclude_files = "T8AFNetworkKit/**/*.plist"
+  #s.exclude_files = "T8AFNetworkKit/**/*.plist"
 
   # s.public_header_files = "Classes/**/*.h"
 
@@ -103,7 +103,7 @@ Pod::Spec.new do |s|
   #  non-essential files like tests, examples and documentation.
   #
 
-  # s.resource  = "icon.png"
+  s.resource  = "T8AFNetworkKit/**/*.plist"
   # s.resources = "Resources/*.png"
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
