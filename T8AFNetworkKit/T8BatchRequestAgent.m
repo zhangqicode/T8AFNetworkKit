@@ -9,16 +9,7 @@
 #import "T8BatchRequestAgent.h"
 
 
-@interface T8BatchRequestAgent ()
-{
-    NSMutableSet *_requests;   //  请求池
-}
-
-@end
-
 @implementation T8BatchRequestAgent
-
-@synthesize requests = _requests;
 
 + (T8BatchRequestAgent *)sharedBatchRequestAgent
 {
@@ -29,42 +20,6 @@
     });
     
     return sharedBatchRequestAgent;
-}
-
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        _requests = [[NSMutableSet alloc] init];
-    }
-    
-    return self;
-}
-
-- (void)addRequest:(id<T8Request>)request
-{
-    if (request) {
-        [_requests addObject:request];
-    }
-}
-
-- (void)removeRequest:(id<T8Request>)request
-{
-    if (request) {
-        [_requests removeObject:request];
-    }
-}
-
-- (void)removeAllRequests
-{
-    [_requests removeAllObjects];
-}
-
-- (void)cancelAllRequests
-{
-    for (id<T8Request> request in _requests) {
-        [request cancel];
-    }
 }
 
 @end

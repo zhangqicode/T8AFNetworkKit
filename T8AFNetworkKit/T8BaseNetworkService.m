@@ -12,6 +12,8 @@
 #define NSLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 #endif
 
+#define kBaseURLOfPathsFile @"baseURLOfPaths.plist"
+
 static NSString *T8BaseNetworkUrl = nil;
 static RequestHandleBlock T8RequestHandleBlock = nil;
 static RequestManagerBlock T8RequestManagerBlock = nil;
@@ -19,6 +21,7 @@ static RequestErrorHandleBlock T8RequestErrorHandleBlock = nil;
 static RequestFailureBlock T8RequestFailureBlock = nil;
 static RequestSuccessHandleBlock T8RequestSuccessBlock = nil;
 static NSArray *T8NullableRequestURLs;
+static NSDictionary *T8BaseURLOfPaths;
 
 @implementation T8BaseNetworkService
 
@@ -33,6 +36,10 @@ static NSArray *T8NullableRequestURLs;
         shareInstance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
         shareInstance.requestSerializer.timeoutInterval = 10;
         shareInstance.operationQueue.maxConcurrentOperationCount = 10;
+        
+        if (!T8BaseURLOfPaths) {
+            T8BaseURLOfPaths = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:kBaseURLOfPathsFile ofType:nil]];
+        }
     });
     
     return shareInstance;
@@ -73,6 +80,17 @@ static NSArray *T8NullableRequestURLs;
 {
     T8NullableRequestURLs = nullableURLs;
 }
+
+//  设置path的baseURL
++ (void)setBaseURLOfPaths:(NSDictionary *)baseURLOfPaths
+{
+    if (baseURLOfPaths) {
+        T8BaseURLOfPaths = [NSDictionary dictionaryWithDictionary:baseURLOfPaths];
+    } else {
+        T8BaseURLOfPaths = nil;
+    }
+}
+
 
 + (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
 {
@@ -223,53 +241,6 @@ static NSArray *T8NullableRequestURLs;
     [dataTask resume];
     return dataTask;
 }
-
-
-//+ (void)sendSyncRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock
-//{
-//    NSString *method;
-//    switch (httpMethod) {
-//        case HttpMethodGet:
-//            method = @"GET";
-//            break;
-//        case HttpMethodPost:
-//            method = @"POST";
-//            break;
-//        case HttpMethodPut:
-//            method = @"PUT";
-//            break;
-//        case HttpMethodDelete:
-//            method = @"DELETE";
-//            break;
-//        case HttpMethodPatch:
-//            method = @"PATCH";
-//            break;
-//        case HttpMethodHead:
-//            method = @"HEAD";
-//            break;
-//        default:
-//            break;
-//    }
-//    
-//    AFHTTPRequestOperationManager *op = [self shareInstance];
-//    NSMutableURLRequest *request = [op.requestSerializer requestWithMethod:method URLString:[self getRequestUrl:strUrlPath] parameters:dictParams error:nil];
-//    if (T8RequestHandleBlock) {
-//        T8RequestHandleBlock(request);
-//    }
-//    
-//    NSError *error = nil;
-//    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-//    if (error) {
-//        [self handleFail:nil error:error block:completeBlock];
-//    }else{
-//        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-//        if (error) {
-//            [self handleFail:nil error:error block:completeBlock];
-//        }else{
-//            [self handleSuccesss:nil response:dict block:completeBlock];
-//        }
-//    }
-//}
 
 + (void)uploadImage:(NSData *)imageData urlPath:(NSString *)strUrlPath filename:(NSString *)filename completBlock:(RequestComplete)completBlock;
 {
@@ -486,7 +457,15 @@ static NSArray *T8NullableRequestURLs;
     }
     
     if (T8BaseNetworkUrl.length>0) {
-        return [NSString stringWithFormat:@"%@/%@", T8BaseNetworkUrl, path];
+        NSString *baseURL = T8BaseNetworkUrl;
+        if (T8BaseURLOfPaths && T8BaseURLOfPaths.count > 0) {
+            baseURL = [T8BaseURLOfPaths objectForKey:path];
+            if (!baseURL || baseURL.length <= 0) {
+                baseURL = T8BaseNetworkUrl;
+            }
+        }
+        
+        return [baseURL stringByAppendingPathComponent:path];
     }else{
         return path;
     }
