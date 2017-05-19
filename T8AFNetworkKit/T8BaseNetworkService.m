@@ -12,6 +12,8 @@
 #define NSLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 #endif
 
+#define kBaseURLOfPathsFile @"baseURLOfPaths.plist"
+
 static NSString *T8BaseNetworkUrl = nil;
 static RequestHandleBlock T8RequestHandleBlock = nil;
 static RequestManagerBlock T8RequestManagerBlock = nil;
@@ -35,7 +37,9 @@ static NSDictionary *T8BaseURLOfPaths;
         shareInstance.requestSerializer.timeoutInterval = 10;
         shareInstance.operationQueue.maxConcurrentOperationCount = 10;
         
-        T8BaseURLOfPaths = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"baseURLOfPaths" ofType:@"plist"]];
+        if (!T8BaseURLOfPaths) {
+            T8BaseURLOfPaths = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[T8BaseNetworkService class]] pathForResource:kBaseURLOfPathsFile ofType:nil]];
+        }
     });
     
     return shareInstance;
@@ -455,7 +459,7 @@ static NSDictionary *T8BaseURLOfPaths;
     if (T8BaseNetworkUrl.length>0) {
         NSString *baseURL = T8BaseNetworkUrl;
         if (T8BaseURLOfPaths && T8BaseURLOfPaths.count > 0) {
-            NSString *baseURL = [T8BaseURLOfPaths objectForKey:path];
+            baseURL = [T8BaseURLOfPaths objectForKey:path];
             if (!baseURL || baseURL.length <= 0) {
                 baseURL = T8BaseNetworkUrl;
             }
