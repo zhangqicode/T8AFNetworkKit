@@ -38,7 +38,7 @@ static NSDictionary *T8BaseURLOfPaths;
         shareInstance.operationQueue.maxConcurrentOperationCount = 10;
         
         if (!T8BaseURLOfPaths) {
-            T8BaseURLOfPaths = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[T8BaseNetworkService class]] pathForResource:kBaseURLOfPathsFile ofType:nil]];
+            T8BaseURLOfPaths = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:kBaseURLOfPathsFile ofType:nil]];
         }
     });
     
