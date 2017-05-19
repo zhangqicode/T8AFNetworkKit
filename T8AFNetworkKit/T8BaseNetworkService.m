@@ -465,7 +465,7 @@ static NSDictionary *T8BaseURLOfPaths;
             }
         }
         
-        return [NSString stringWithFormat:@"%@/%@", baseURL, path];
+        return [baseURL stringByAppendingPathComponent:path];
     }else{
         return path;
     }
