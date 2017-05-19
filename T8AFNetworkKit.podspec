@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "T8AFNetworkKit"
-  s.version      = "0.1.2"
+  s.version      = "0.1.12"
   s.summary      = "A short description of T8AFNetworkKit."
 
   s.description  = <<-DESC
@@ -78,7 +78,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/zhangqippp/T8AFNetworkKit.git", :tag => "0.1.10" }
+  s.source       = { :git => "https://github.com/zhangqippp/T8AFNetworkKit.git", :tag => "0.1.12" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
