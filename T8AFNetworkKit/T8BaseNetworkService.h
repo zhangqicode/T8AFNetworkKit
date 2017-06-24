@@ -54,6 +54,8 @@ typedef void(^RequestSuccessHandleBlock)(NSDictionary *data);
 
 //  设置哪些请求的result值可以为null
 + (void)setNullableURLS:(NSArray *)nullableURLs;
+//  设置path的baseURL
++ (void)setBaseURLOfPaths:(NSDictionary *)baseURLOfPaths;
 
 + (NSURLSessionDataTask *)sendRequestUrlPath:(NSString *)strUrlPath httpMethod:(HttpMethod)httpMethod dictParams:(NSMutableDictionary *)dictParams completeBlock:(RequestComplete)completeBlock;
 

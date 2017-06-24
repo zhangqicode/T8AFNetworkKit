@@ -12,9 +12,10 @@
 
 @interface T8RequestAgent ()
 {
-    NSMutableSet *_requests;   //  请求池
     pthread_mutex_t _lock;
 }
+
+@property (nonatomic, strong, readwrite) NSMutableSet *requests;    //  请求池
 
 @end
 
